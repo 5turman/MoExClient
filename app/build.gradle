@@ -1,0 +1,136 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.getkeepsafe.dexcount'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        applicationId "org.example.moex"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+
+            minifyEnabled false
+        }
+    }
+
+    productFlavors {
+        mock {
+            applicationIdSuffix = ".mock"
+        }
+        prod {
+        }
+    }
+
+    // Remove mockRelease as it's not needed.
+    android.variantFilter { variant ->
+        if (variant.buildType.name == 'release'
+                && variant.getFlavors().get(0).name == 'mock') {
+            variant.setIgnore(true);
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+
+        mock.java.srcDirs += 'src/mock/kotlin'
+        prod.java.srcDirs += 'src/prod/kotlin'
+
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        androidTestMock.java.srcDirs += 'src/androidTestMock/kotlin'
+    }
+
+    testOptions {
+        // Whether unmocked methods from android.jar should throw exceptions or
+        // return default values (i.e. zero or null).
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    // Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
+
+    // Dagger
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+
+    // KAndroid
+    compile "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"
+
+    // Android Support Libraries
+    compile "com.android.support:appcompat-v7:${rootProject.supportLibraryVersion}"
+    compile "com.android.support:recyclerview-v7:${rootProject.supportLibraryVersion}"
+    compile "com.android.support:design:${rootProject.supportLibraryVersion}"
+
+    // Joda Time for Android
+    compile "net.danlew:android.joda:${rootProject.androidJoda}"
+
+    // OkHttp Logging
+    compile "com.squareup.okhttp3:logging-interceptor:${rootProject.okHttpVersion}"
+
+    // Retrofit
+    compile "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}"
+    compile("com.squareup.retrofit2:converter-simplexml:${rootProject.retrofitVersion}") {
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+    }
+    compile "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofitVersion}"
+
+    // Rx
+    compile "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlin}"
+    compile "io.reactivex.rxjava2:rxandroid:${rootProject.rxAndroid}"
+
+    // Anko SQLite
+    compile "org.jetbrains.anko:anko-sqlite:${rootProject.ankoVersion}"
+
+    // MPAndroidChart
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+
+    // Unit Testing
+    testCompile "junit:junit:${rootProject.junitVersion}"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:${rootProject.kotlinVersion}"
+    testCompile("com.nhaarman:mockito-kotlin:${rootProject.kotlinMockitoVersion}") {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${rootProject.kotlinVersion}"
+
+    // UI Testing
+    androidTestCompile("com.android.support.test:runner:${rootProject.runnerVersion}", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile("com.android.support.test:rules:${rootProject.rulesVersion}", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile("com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+}
+
+kapt {
+    generateStubs = true
+}
+
+dexcount {
+    orderByMethodCount = true
+}

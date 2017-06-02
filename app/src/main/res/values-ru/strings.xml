@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string name="title_shares">Акции</string>
+
+    <string name="hint_search">Поиск</string>
+
+    <string name="nav_drawer_open">Открыть боковое меню</string>
+    <string name="nav_drawer_close">Закрыть боковое меню</string>
+
+    <string name="yesterday">вчера</string>
+
+    <string name="error_network">Ошибка сети</string>
+
+    <string name="no_data">Нет данных</string>
+
+</resources>
