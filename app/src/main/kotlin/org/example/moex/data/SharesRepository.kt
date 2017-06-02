@@ -10,4 +10,9 @@ interface SharesRepository {
 
     fun getAll(forceUpdate: Boolean): Observable<List<Share>>
 
+    /**
+     * @param interval in seconds
+     */
+    fun get(shareId: String, interval: Int = 5): Observable<Share>
+
 }

@@ -6,6 +6,7 @@ import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
 import org.example.moex.di.qualifier.Local
 import org.example.moex.di.qualifier.Remote
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -49,6 +50,17 @@ class SharesRepositoryImpl @Inject constructor(
                 }
                 .subscribeOn(Schedulers.io())
     }
+
+    override fun get(shareId: String, interval: Int): Observable<Share> =
+            Observable.interval(0, 5, TimeUnit.SECONDS)
+                    .flatMap {
+                        remoteDataSource.get(shareId)
+                                .doOnSuccess {
+                                    cache += (it.id to it)
+                                    localDataSource.put(it)
+                                }
+                                .toObservable()
+                    }
 
     private fun loadSharesByApi() =
             remoteDataSource.getAll()

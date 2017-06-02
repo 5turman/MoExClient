@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_shares.*
 import org.example.moex.App
 import org.example.moex.R
 import org.example.moex.data.model.Share
-import org.example.moex.ui.share.ShareActivity
+import org.example.moex.ui.chart.ChartActivity
 import javax.inject.Inject
 
 /**
@@ -128,7 +128,8 @@ class SharesFragment : Fragment(), SharesContract.View {
     }
 
     override fun show(share: Share) {
-        startActivity(ShareActivity.newIntent(context, share.id))
+//        startActivity(ShareActivity.newIntent(context, share.id))
+        startActivity(ChartActivity.newIntent(context, share.id))
     }
 
     private fun updateZeroView() {
