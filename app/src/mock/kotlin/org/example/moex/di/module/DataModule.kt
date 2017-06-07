@@ -30,4 +30,11 @@ class DataModule {
     fun provideSharesRepository(provider: Provider<SharesRepositoryImpl>): SharesRepository =
             SharesRepositoryProxy.apply { this.provider = provider }
 
+    @Provides
+    @PerApp
+    fun quotesStorage(context: Context): QuotesStorage {
+        val dir = File(context.filesDir, "quotes").apply { mkdirs() }
+        return QuotesStorage(dir)
+    }
+
 }

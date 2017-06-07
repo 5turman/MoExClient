@@ -2,6 +2,7 @@ package org.example.moex.data
 
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import org.example.moex.core.QuotesStorage
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
 import org.example.moex.di.qualifier.Local
@@ -14,7 +15,8 @@ import javax.inject.Inject
  */
 class SharesRepositoryImpl @Inject constructor(
         private @Local val localDataSource: SharesDataSource,
-        private @Remote val remoteDataSource: SharesDataSource) : SharesRepository {
+        private @Remote val remoteDataSource: SharesDataSource,
+        private val quotesStorage: QuotesStorage) : SharesRepository {
 
     private @Volatile var cache = emptyMap<String, Share>()
 
@@ -51,16 +53,17 @@ class SharesRepositoryImpl @Inject constructor(
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun get(shareId: String, interval: Int): Observable<Share> =
-            Observable.interval(0, 5, TimeUnit.SECONDS)
-                    .flatMap {
-                        remoteDataSource.get(shareId)
-                                .doOnSuccess {
-                                    cache += (it.id to it)
-                                    localDataSource.put(it)
-                                }
-                                .toObservable()
+    override fun get(shareId: String, period: Int): Observable<Share> =
+            remoteDataSource.get(shareId)
+                    .repeatWhen { source -> source.delay(period.toLong(), TimeUnit.SECONDS) }
+                    .doOnNext { share ->
+                        cache += (share.id to share)
+                        localDataSource.put(share)
+                        quotesStorage.getWriter(shareId).use {
+                            it.write(share.last, share.timestamp)
+                        }
                     }
+                    .toObservable()
 
     private fun loadSharesByApi() =
             remoteDataSource.getAll()
