@@ -1,8 +1,10 @@
 package org.example.moex.ui.chart
 
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.example.moex.data.SharesRepository
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -19,6 +21,11 @@ class ChartPresenter @Inject constructor(
     override fun onStart() {
         println("onStart")
         disposable = repo.get(shareId)
+                .retryWhen { errors ->
+                    errors.flatMap({ error ->
+                        Observable.timer(5, TimeUnit.SECONDS)
+                    })
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { share ->
                     view?.add(share)
@@ -28,7 +35,6 @@ class ChartPresenter @Inject constructor(
     override fun onStop() {
         println("onStop")
         disposable?.dispose()
-        // stop gathering data
     }
 
     override fun attachView(view: ChartContract.View) {
@@ -40,9 +46,5 @@ class ChartPresenter @Inject constructor(
         println("detachView")
         this.view = null
     }
-
-    /*
-2. draw simple chart. While just points
- */
 
 }

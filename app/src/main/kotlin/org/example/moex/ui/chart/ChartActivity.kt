@@ -16,7 +16,7 @@ class ChartActivity : AppCompatActivity() {
 
     companion object {
 
-        val KEY_ID = "id"
+        const val KEY_ID = "id"
 
         fun newIntent(context: Context, shareId: String): Intent =
                 IntentFor<ChartActivity>(context).putExtra(KEY_ID, shareId)
