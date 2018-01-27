@@ -34,7 +34,7 @@ class SharesFragment : Fragment(), SharesContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        App.getComponent(context).inject(this)
+        App.getComponent(context!!).inject(this)
 
         adapter = SharesAdapter(timeFormatter, object : SharesAdapter.Callback {
             override fun onClick(position: Int) {
@@ -129,7 +129,7 @@ class SharesFragment : Fragment(), SharesContract.View {
 
     override fun show(share: Share) {
 //        startActivity(ShareActivity.newIntent(context, share.id))
-        startActivity(ChartActivity.newIntent(context, share.id))
+        startActivity(ChartActivity.newIntent(context!!, share.id))
     }
 
     private fun updateZeroView() {

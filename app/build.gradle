@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -11,8 +12,8 @@ android {
         applicationId "org.example.moex"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -38,6 +39,8 @@ android {
         prod {
         }
     }
+
+    flavorDimensions "full"
 
     // Remove mockRelease as it's not needed.
     android.variantFilter { variant ->
@@ -67,62 +70,62 @@ android {
 
 dependencies {
     // Kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
 
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile "com.google.dagger:dagger:$rootProject.daggerVersion"
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
 
     // KAndroid
-    compile "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"
+    implementation "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"
 
     // Android Support Libraries
-    compile "com.android.support:appcompat-v7:${rootProject.supportLibraryVersion}"
-    compile "com.android.support:recyclerview-v7:${rootProject.supportLibraryVersion}"
-    compile "com.android.support:design:${rootProject.supportLibraryVersion}"
+    implementation "com.android.support:appcompat-v7:${rootProject.supportLibraryVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.supportLibraryVersion}"
+    implementation "com.android.support:design:${rootProject.supportLibraryVersion}"
 
     // Joda Time for Android
-    compile "net.danlew:android.joda:${rootProject.androidJoda}"
+    implementation "net.danlew:android.joda:${rootProject.androidJoda}"
 
     // OkHttp Logging
-    compile "com.squareup.okhttp3:logging-interceptor:${rootProject.okHttpVersion}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.okHttpVersion}"
 
     // Retrofit
-    compile "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}"
-    compile("com.squareup.retrofit2:converter-simplexml:${rootProject.retrofitVersion}") {
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}"
+    implementation("com.squareup.retrofit2:converter-simplexml:${rootProject.retrofitVersion}") {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    compile "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofitVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofitVersion}"
 
     // Rx
-    compile "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlin}"
-    compile "io.reactivex.rxjava2:rxandroid:${rootProject.rxAndroid}"
+    implementation "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlinVersion}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxAndroidVersion}"
 
     // Anko SQLite
-    compile "org.jetbrains.anko:anko-sqlite:${rootProject.ankoVersion}"
+    implementation "org.jetbrains.anko:anko-sqlite:${rootProject.ankoVersion}"
 
     // MPAndroidChart
-    compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     // Unit Testing
-    testCompile "junit:junit:${rootProject.junitVersion}"
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:${rootProject.kotlinVersion}"
-    testCompile("com.nhaarman:mockito-kotlin:${rootProject.kotlinMockitoVersion}") {
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:${rootProject.kotlinVersion}"
+    testImplementation("com.nhaarman:mockito-kotlin:${rootProject.kotlinMockitoVersion}") {
         exclude group: 'org.jetbrains.kotlin'
     }
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit:${rootProject.kotlinVersion}"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${rootProject.kotlinVersion}"
 
     // UI Testing
-    androidTestCompile("com.android.support.test:runner:${rootProject.runnerVersion}", {
+    androidTestImplementation("com.android.support.test:runner:${rootProject.runnerVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile("com.android.support.test:rules:${rootProject.rulesVersion}", {
+    androidTestImplementation("com.android.support.test:rules:${rootProject.rulesVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile("com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}", {
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
