@@ -2,44 +2,47 @@ package org.example.moex.ui.shares
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.*
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_shares.*
 import org.example.moex.App
 import org.example.moex.R
+import org.example.moex.core.showOrHide
 import org.example.moex.data.model.Share
 import org.example.moex.ui.chart.ChartActivity
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 22.03.2017.
  */
-class SharesFragment : Fragment(), SharesContract.View {
+class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
 
     companion object {
         const val STATE_SEARCH_VIEW = "search_view"
     }
 
-    @Inject lateinit var presenter: SharesPresenter
-    @Inject lateinit var timeFormatter: TimeFormatter
+    @InjectPresenter
+    lateinit var presenter: SharesPresenter
 
     lateinit var adapter: SharesAdapter
 
     var searchView: SearchView? = null
     var searchViewState: SearchViewState? = null
 
+    @ProvidePresenter
+    fun providePresenter() = App.getComponent(context!!).createSharesPresenter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        App.getComponent(context!!).inject(this)
-
-        adapter = SharesAdapter(timeFormatter, object : SharesAdapter.Callback {
+        adapter = SharesAdapter(object : SharesAdapter.Callback {
             override fun onClick(position: Int) {
                 val share = adapter.getItem(position)
-                presenter.show(share)
+                presenter.onShareClick(share)
             }
         })
         searchViewState = savedInstanceState?.getParcelable(STATE_SEARCH_VIEW)
@@ -51,15 +54,13 @@ class SharesFragment : Fragment(), SharesContract.View {
             inflater.inflate(R.layout.fragment_shares, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         (activity as AppCompatActivity).apply {
             setSupportActionBar(toolbar)
             setTitle(R.string.title_shares)
         }
 
         refreshLayout.setOnRefreshListener {
-            presenter.refresh()
+            presenter.onRefresh()
         }
 
         recyclerView.apply {
@@ -67,14 +68,6 @@ class SharesFragment : Fragment(), SharesContract.View {
             setHasFixedSize(true)
             adapter = this@SharesFragment.adapter
         }
-
-        presenter.attachView(this)
-        presenter.loadShares()
-    }
-
-    override fun onDestroyView() {
-        presenter.detachView()
-        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -109,31 +102,22 @@ class SharesFragment : Fragment(), SharesContract.View {
         this.searchView = searchView
     }
 
-    override fun showRefreshing() {
-        refreshLayout.isRefreshing = true
-    }
-
-    override fun hideRefreshing() {
-        refreshLayout.isRefreshing = false
+    override fun showRefreshing(show: Boolean) {
+        refreshLayout.isRefreshing = show
     }
 
     override fun showShares(shares: List<Share>) {
         adapter.setItems(shares)
-        updateZeroView()
+        zeroView.showOrHide(shares.isEmpty())
     }
 
     override fun showError(error: String) {
         Snackbar.make(view!!, error, Snackbar.LENGTH_LONG).show()
-        updateZeroView()
     }
 
     override fun show(share: Share) {
 //        startActivity(ShareActivity.newIntent(context, share.id))
         startActivity(ChartActivity.newIntent(context!!, share.id))
-    }
-
-    private fun updateZeroView() {
-        zeroView.visibility = if (adapter.itemCount > 0) View.GONE else View.VISIBLE
     }
 
 }

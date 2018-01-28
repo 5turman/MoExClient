@@ -8,7 +8,7 @@ import org.example.moex.di.scope.PerApp
 import org.example.moex.ui.chart.ChartComponent
 import org.example.moex.ui.chart.ChartModule
 import org.example.moex.ui.share.ShareActivity
-import org.example.moex.ui.shares.SharesFragment
+import org.example.moex.ui.shares.SharesPresenter
 
 /**
  * Created by 5turman on 23.03.2017.
@@ -19,8 +19,8 @@ interface AppComponent {
 
     fun inject(activity: ShareActivity)
 
-    fun inject(fragment: SharesFragment)
-
     fun chartComponent(chartModule: ChartModule): ChartComponent
+
+    fun createSharesPresenter(): SharesPresenter
 
 }

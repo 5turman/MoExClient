@@ -45,6 +45,7 @@ ext {
     rxKotlinVersion = '2.2.0'
     rxAndroidVersion = '2.0.1'
     ankoVersion = '0.10.4'
+    moxyVersion = '1.5.3'
 
     // Testing dependencies
     junitVersion = '4.12'

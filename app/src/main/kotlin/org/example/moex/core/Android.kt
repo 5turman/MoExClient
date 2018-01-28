@@ -18,16 +18,20 @@ fun Context.showToast(text: CharSequence) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
 
+fun View.showOrHide(show: Boolean) {
+    visibility = if (show) View.VISIBLE else View.GONE
+}
+
 fun View.show() {
     visibility = View.VISIBLE
 }
 
 fun View.hide() {
-    visibility = View.INVISIBLE
+    visibility = View.GONE
 }
 
-fun View.setGone() {
-    visibility = View.GONE
+fun View.setInvisible() {
+    visibility = View.INVISIBLE
 }
 
 fun DisplayMetrics.toPx(dp: Int) = (density * dp + 0.5f).toInt()

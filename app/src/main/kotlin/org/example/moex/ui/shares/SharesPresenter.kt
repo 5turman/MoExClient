@@ -1,5 +1,7 @@
 package org.example.moex.ui.shares
 
+import com.arellomobile.mvp.InjectViewState
+import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -16,20 +18,19 @@ import javax.inject.Inject
 /**
  * Created by 5turman on 22.03.2017.
  */
-class SharesPresenter @Inject constructor(private val repo: SharesRepository) : SharesContract.Presenter {
+@InjectViewState
+class SharesPresenter @Inject constructor(private val repo: SharesRepository)
+    : MvpPresenter<SharesContract.View>(), SharesContract.Presenter {
 
     private val sharesSubject = PublishSubject.create<List<Share>>()
     private val querySubject = BehaviorSubject.createDefault<String>("")
 
-    private lateinit var modelDisposable: Disposable
+    private lateinit var queryDisposable: Disposable
 
-    private var view: SharesContract.View? = null
     private var repoDisposable: Disposable? = null
 
-    override fun attachView(view: SharesContract.View) {
-        this.view = view
-
-        modelDisposable = Observable.combineLatest(
+    override fun onFirstViewAttach() {
+        queryDisposable = Observable.combineLatest(
                 sharesSubject,
                 querySubject
                         .apply {
@@ -52,21 +53,27 @@ class SharesPresenter @Inject constructor(private val repo: SharesRepository) : 
         )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    this@SharesPresenter.view?.showShares(it)
+                    viewState.showShares(it)
                 }
+
     }
 
-    override fun detachView() {
-        repoDisposable?.dispose()
-        modelDisposable.dispose()
-        view = null
-    }
-
-    override fun loadShares() {
+    override fun attachView(view: SharesContract.View) {
+        super.attachView(view)
         loadShares(false)
     }
 
-    override fun refresh() {
+    override fun detachView(view: SharesContract.View?) {
+        repoDisposable?.dispose()
+        super.detachView(view)
+    }
+
+    override fun onDestroy() {
+        queryDisposable.dispose()
+        super.onDestroy()
+    }
+
+    override fun onRefresh() {
         repoDisposable?.dispose()
         loadShares(true)
     }
@@ -75,25 +82,25 @@ class SharesPresenter @Inject constructor(private val repo: SharesRepository) : 
         querySubject.onNext(query)
     }
 
-    override fun show(share: Share) {
-        view?.show(share)
+    override fun onShareClick(share: Share) {
+        viewState.show(share)
     }
 
     private fun loadShares(forceUpdate: Boolean) {
-        view?.showRefreshing()
+        viewState.showRefreshing(true)
 
         repoDisposable = repo.getAll(forceUpdate)
                 .map { it.sortedBy { it.shortName } }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterTerminate {
-                    view?.hideRefreshing()
+                    viewState.showRefreshing(false)
                 }
                 .subscribe(
                         { shares -> sharesSubject.onNext(shares) },
                         { error ->
                             val message = error.message ?: error.javaClass.simpleName
-                            this@SharesPresenter.view?.showError(message)
+                            viewState.showError(message)
                         }
                 )
     }

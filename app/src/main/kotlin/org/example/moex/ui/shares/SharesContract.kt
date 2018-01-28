@@ -1,7 +1,9 @@
 package org.example.moex.ui.shares
 
-import org.example.moex.core.mvp.BasePresenter
-import org.example.moex.core.mvp.BaseView
+import com.arellomobile.mvp.MvpView
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
+import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import org.example.moex.data.model.Share
 
 /**
@@ -9,19 +11,23 @@ import org.example.moex.data.model.Share
  */
 interface SharesContract {
 
-    interface View : BaseView {
-        fun showRefreshing()
-        fun hideRefreshing()
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    interface View : MvpView {
+        fun showRefreshing(show: Boolean)
+
         fun showShares(shares: List<Share>)
+
+        @StateStrategyType(OneExecutionStateStrategy::class)
         fun showError(error: String)
+
+        @StateStrategyType(OneExecutionStateStrategy::class)
         fun show(share: Share)
     }
 
-    interface Presenter : BasePresenter<View> {
-        fun loadShares()
-        fun refresh()
+    interface Presenter {
+        fun onRefresh()
         fun onQueryTextChange(query: String)
-        fun show(share: Share)
+        fun onShareClick(share: Share)
     }
 
 }

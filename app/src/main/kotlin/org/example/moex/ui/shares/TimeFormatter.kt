@@ -3,17 +3,14 @@ package org.example.moex.ui.shares
 import android.content.Context
 import android.text.format.DateUtils
 import org.example.moex.R
-import org.example.moex.di.scope.PerApp
 import org.joda.time.DateTime
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 04.04.2017.
  */
-@PerApp
-class TimeFormatter @Inject constructor(val context: Context) {
+object TimeFormatter {
 
-    fun format(time: Long): CharSequence {
+    fun format(context: Context, time: Long): CharSequence {
         val result: String
 
         val now = DateTime.now()

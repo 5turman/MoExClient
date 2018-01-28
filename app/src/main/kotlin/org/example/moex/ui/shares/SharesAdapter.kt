@@ -17,7 +17,7 @@ import org.example.moex.data.model.Share
 /**
  * Created by 5turman on 23.03.2017.
  */
-class SharesAdapter(val timeFormatter: TimeFormatter, val callback: Callback)
+class SharesAdapter(val callback: Callback)
     : BaseAdapter<Share, SharesAdapter.ViewHolder>() {
 
     interface Callback {
@@ -33,6 +33,7 @@ class SharesAdapter(val timeFormatter: TimeFormatter, val callback: Callback)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val context = holder.itemView.context
         val share = getItem(position)
         holder.name.text = share.shortName
         holder.id.text = share.id
@@ -40,9 +41,9 @@ class SharesAdapter(val timeFormatter: TimeFormatter, val callback: Callback)
         holder.change.apply {
             text = share.lastToPrev.toString()
             setCompoundDrawablesWithIntrinsicBounds(
-                    getDrawable(holder.itemView.context, share.lastToPrev), null, null, null)
+                    getDrawable(context, share.lastToPrev), null, null, null)
         }
-        holder.dateTime.text = timeFormatter.format(share.timestamp)
+        holder.dateTime.text = TimeFormatter.format(context, share.timestamp)
     }
 
     class ViewHolder(itemView: View, callback: Callback) : RecyclerView.ViewHolder(itemView) {

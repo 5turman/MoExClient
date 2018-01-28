@@ -18,10 +18,10 @@ class SharesRepositoryImpl @Inject constructor(
         private @Remote val remoteDataSource: SharesDataSource,
         private val quotesStorage: QuotesStorage) : SharesRepository {
 
-    private @Volatile var cache = emptyMap<String, Share>()
+    @Volatile
+    private var cache = emptyMap<String, Share>()
 
     override fun getAll(forceUpdate: Boolean): Observable<List<Share>> {
-
         if (cache.isNotEmpty()) {
             var observable = Observable.just(cache.values.toList())
 
@@ -36,7 +36,6 @@ class SharesRepositoryImpl @Inject constructor(
 
             return observable
         }
-
         return localDataSource.getAll()
                 .flatMapObservable { shares ->
                     if (shares.isEmpty()) {
