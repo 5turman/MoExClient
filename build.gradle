@@ -5,12 +5,12 @@ buildscript {
     }
 
     // Kotlin
-    ext.kotlinVersion = '1.2.21'
+    ext.kotlinVersion = '1.2.31'
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
         // https://github.com/ben-manes/gradle-versions-plugin
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
@@ -33,11 +33,11 @@ ext {
     minSdkVersion = 19
     targetSdkVersion = 27
     compileSdkVersion = 27
-    buildToolsVersion = '27.0.1'
+    buildToolsVersion = '27.0.3'
 
     // App dependencies
     daggerVersion = '2.14.1'
-    supportLibraryVersion = '27.0.2'
+    supportLibraryVersion = '27.1.1'
     kAndroidVersion = '0.6.15'
     androidJoda = '2.9.9.1'
     okHttpVersion = '3.9.1'
@@ -46,6 +46,10 @@ ext {
     rxAndroidVersion = '2.0.1'
     ankoVersion = '0.10.4'
     moxyVersion = '1.5.3'
+    lifecycleVersion = '1.1.1'
+    roomVersion = '1.0.0'
+    pagingVersion = '1.0.0-beta1'
+    rxPagingVersion = '1.0.0-alpha1'
 
     // Testing dependencies
     junitVersion = '4.12'
