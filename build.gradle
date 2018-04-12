@@ -44,7 +44,6 @@ ext {
     retrofitVersion = '2.3.0'
     rxKotlinVersion = '2.2.0'
     rxAndroidVersion = '2.0.1'
-    ankoVersion = '0.10.4'
     moxyVersion = '1.5.3'
     lifecycleVersion = '1.1.1'
     roomVersion = '1.0.0'

@@ -135,9 +135,6 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlinVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxAndroidVersion}"
 
-    // Anko SQLite
-    implementation "org.jetbrains.anko:anko-sqlite:${rootProject.ankoVersion}"
-
     // Moxy
     implementation "com.arello-mobile:moxy:${rootProject.moxyVersion}"
     implementation "com.arello-mobile:moxy-app-compat:${rootProject.moxyVersion}"

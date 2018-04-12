@@ -14,7 +14,7 @@ import org.example.moex.ui.shares.SharesPresenter
  * Created by 5turman on 23.03.2017.
  */
 @PerApp
-@Component(modules = arrayOf(AppModule::class, ApiModule::class, DataModule::class))
+@Component(modules = [AppModule::class, ApiModule::class, DataModule::class])
 interface AppComponent {
 
     fun inject(activity: ShareActivity)

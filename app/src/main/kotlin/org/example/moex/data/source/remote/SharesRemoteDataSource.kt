@@ -1,5 +1,7 @@
 package org.example.moex.data.source.remote
 
+import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.example.moex.api.Api
 import org.example.moex.api.ApiErrorHandler
@@ -14,23 +16,25 @@ import javax.inject.Inject
  */
 @PerApp
 class SharesRemoteDataSource @Inject constructor(
-        private val api: Api, private val errorHandler: ApiErrorHandler) : SharesDataSource {
+    private val api: Api, private val errorHandler: ApiErrorHandler
+) : SharesDataSource {
 
     override fun getAll(): Single<List<Share>> =
-            api.getShares(null)
-                    .compose(errorHandler.cast())
-                    .map(SharesBuilder)
+        api.getShares(null)
+            .compose(errorHandler.cast())
+            .map(SharesBuilder)
 
-    override fun get(id: String): Single<Share> =
-            api.getShare(id)
-                    .compose(errorHandler.cast())
-                    .map { dto -> SharesBuilder.apply(dto)[0] }
+    override fun get(id: String): Maybe<Share> =
+        api.getShare(id)
+            .compose(errorHandler.cast())
+            .map { dto -> SharesBuilder.apply(dto)[0] }
+            .toMaybe()
 
-    override fun put(share: Share) {
+    override fun put(share: Share): Completable {
         throw UnsupportedOperationException()
     }
 
-    override fun put(shares: List<Share>) {
+    override fun put(shares: List<Share>): Completable {
         throw UnsupportedOperationException()
     }
 
