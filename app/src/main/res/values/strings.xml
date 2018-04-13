@@ -6,9 +6,6 @@
 
     <string name="hint_search">Search</string>
 
-    <string name="nav_drawer_open">Open side menu</string>
-    <string name="nav_drawer_close">Close side menu</string>
-
     <string name="yesterday">yesterday</string>
 
     <string name="error_network">Network error</string>
