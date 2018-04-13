@@ -86,35 +86,12 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:design:${rootProject.supportLibraryVersion}"
 
-    // ViewModel and LiveData
-    implementation "android.arch.lifecycle:extensions:${rootProject.lifecycleVersion}"
-    // alternatively, just ViewModel
-//    implementation "android.arch.lifecycle:viewmodel:${rootProject.lifecycleVersion}"
-    // alternatively, just LiveData
-//    implementation "android.arch.lifecycle:livedata:${rootProject.lifecycleVersion}"
-    kapt "android.arch.lifecycle:compiler:${rootProject.lifecycleVersion}"
-
     // Room (use 1.1.0-beta2 for latest beta)
     implementation "android.arch.persistence.room:runtime:${rootProject.roomVersion}"
     kapt "android.arch.persistence.room:compiler:${rootProject.roomVersion}"
 
-    // Paging
-    implementation "android.arch.paging:runtime:${rootProject.pagingVersion}"
-
     // RxJava support for Room (use 1.1.0-beta2 for latest alpha)
     implementation "android.arch.persistence.room:rxjava2:${rootProject.roomVersion}"
-
-    // ReactiveStreams support for LiveData
-    implementation "android.arch.lifecycle:reactivestreams:${rootProject.lifecycleVersion}"
-
-    // RxJava support for Paging
-    implementation "android.arch.paging:rxjava2:${rootProject.rxPagingVersion}"
-
-    // Test helpers for LiveData
-    testImplementation "android.arch.core:core-testing:${rootProject.lifecycleVersion}"
-
-    // Test helpers for Room
-    testImplementation "android.arch.persistence.room:testing:${rootProject.roomVersion}"
 
     // Joda Time for Android
     implementation "net.danlew:android.joda:${rootProject.androidJoda}"

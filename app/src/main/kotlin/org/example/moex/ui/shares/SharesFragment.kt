@@ -5,7 +5,11 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -34,7 +38,7 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
     var searchViewState: SearchViewState? = null
 
     @ProvidePresenter
-    fun providePresenter() = App.getComponent(context!!).createSharesPresenter()
+    fun providePresenter() = App.getComponent(requireContext()).createSharesPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +54,12 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_shares, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        inflater.inflate(R.layout.fragment_shares, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (activity as AppCompatActivity).apply {

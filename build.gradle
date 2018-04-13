@@ -45,10 +45,7 @@ ext {
     rxKotlinVersion = '2.2.0'
     rxAndroidVersion = '2.0.1'
     moxyVersion = '1.5.3'
-    lifecycleVersion = '1.1.1'
     roomVersion = '1.0.0'
-    pagingVersion = '1.0.0-beta1'
-    rxPagingVersion = '1.0.0-alpha1'
 
     // Testing dependencies
     junitVersion = '4.12'
