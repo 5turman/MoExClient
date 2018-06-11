@@ -13,11 +13,13 @@ import javax.inject.Inject
 /**
  * Created by 5turman on 22.03.2017.
  */
-class SharesRepositoryImpl @Inject constructor(
+class SharesRepositoryImpl
+@Inject constructor(
     @Local private val localDataSource: SharesDataSource,
     @Remote private val remoteDataSource: SharesDataSource,
     private val quotesStorage: QuotesStorage
-) : SharesRepository {
+) :
+    SharesRepository {
 
     @Volatile
     private var cache = emptyMap<String, Share>()

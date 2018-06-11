@@ -72,6 +72,7 @@ android {
 dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
+    implementation "androidx.core:core-ktx:${rootProject.ktxVersion}"
 
     // Dagger
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
@@ -86,11 +87,11 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:design:${rootProject.supportLibraryVersion}"
 
-    // Room (use 1.1.0-beta2 for latest beta)
+    // Room
     implementation "android.arch.persistence.room:runtime:${rootProject.roomVersion}"
     kapt "android.arch.persistence.room:compiler:${rootProject.roomVersion}"
 
-    // RxJava support for Room (use 1.1.0-beta2 for latest alpha)
+    // RxJava support for Room
     implementation "android.arch.persistence.room:rxjava2:${rootProject.roomVersion}"
 
     // Joda Time for Android

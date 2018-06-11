@@ -12,21 +12,20 @@ import org.example.moex.di.module.AppModule
  */
 class App : Application() {
 
-    lateinit var component: AppComponent
-        private set
+    private lateinit var component: AppComponent
 
     override fun onCreate() {
         super.onCreate()
 
         JodaTimeAndroid.init(this)
 
-        component = DaggerAppComponent.builder().appModule(AppModule(applicationContext)).build()
+        component = DaggerAppComponent.builder()
+            .appModule(AppModule(applicationContext))
+            .build()
     }
 
     companion object {
-
-        fun getComponent(context: Context) = (context.applicationContext as App).component
-
+        fun component(context: Context) = (context.applicationContext as App).component
     }
 
 }

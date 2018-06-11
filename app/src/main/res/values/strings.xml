@@ -3,13 +3,11 @@
     <string name="app_name">MoEx Client</string>
 
     <string name="title_shares">Shares</string>
-
     <string name="hint_search">Search</string>
-
     <string name="yesterday">yesterday</string>
 
-    <string name="error_network">Network error</string>
-
+    <string name="no_connection">No connection</string>
     <string name="no_data">No data</string>
+    <string name="error_receiving_data">Error receiving data</string>
 
 </resources>

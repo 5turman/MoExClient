@@ -14,7 +14,8 @@ import javax.inject.Inject
  * Created by 5turman on 29.03.2017.
  */
 @PerApp
-class SharesLocalDataSource @Inject constructor(private val dao: ShareDao) : SharesDataSource {
+class SharesLocalDataSource
+@Inject constructor(private val dao: ShareDao) : SharesDataSource {
 
     override fun get(id: String): Maybe<Share> = dao.get(id).subscribeOn(Schedulers.io())
 

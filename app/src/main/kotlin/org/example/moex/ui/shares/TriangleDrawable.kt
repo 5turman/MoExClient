@@ -3,7 +3,6 @@ package org.example.moex.ui.shares
 import android.graphics.Path
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.PathShape
-import android.graphics.drawable.shapes.Shape
 
 /**
  * Created by 5turman on 01.04.2017.
@@ -23,7 +22,7 @@ class TriangleDrawable(isUp: Boolean, width: Float, height: Float, color: Int) :
             path.close()
         }
 
-        shape = PathShape(path, width, height) as Shape
+        shape = PathShape(path, width, height)
         paint.color = color
 
         intrinsicWidth = width.toInt()

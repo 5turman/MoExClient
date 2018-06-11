@@ -17,8 +17,8 @@ import org.example.moex.data.model.Share
 /**
  * Created by 5turman on 23.03.2017.
  */
-class SharesAdapter(val callback: Callback)
-    : BaseAdapter<Share, SharesAdapter.ViewHolder>() {
+class SharesAdapter(private val callback: Callback) :
+    BaseAdapter<Share, SharesAdapter.ViewHolder>() {
 
     interface Callback {
         fun onClick(position: Int)
@@ -41,7 +41,8 @@ class SharesAdapter(val callback: Callback)
         holder.change.apply {
             text = share.lastToPrev.toString()
             setCompoundDrawablesWithIntrinsicBounds(
-                    getDrawable(context, share.lastToPrev), null, null, null)
+                getDrawable(context, share.lastToPrev), null, null, null
+            )
         }
         holder.dateTime.text = TimeFormatter.format(context, share.timestamp)
     }

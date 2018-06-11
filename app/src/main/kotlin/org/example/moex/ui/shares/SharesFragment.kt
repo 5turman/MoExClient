@@ -10,13 +10,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_shares.*
 import org.example.moex.App
 import org.example.moex.R
-import org.example.moex.core.showOrHide
 import org.example.moex.data.model.Share
 import org.example.moex.ui.chart.ChartActivity
 
@@ -25,20 +25,16 @@ import org.example.moex.ui.chart.ChartActivity
  */
 class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
 
-    companion object {
-        const val STATE_SEARCH_VIEW = "search_view"
-    }
-
     @InjectPresenter
     lateinit var presenter: SharesPresenter
 
-    lateinit var adapter: SharesAdapter
+    private lateinit var adapter: SharesAdapter
 
-    var searchView: SearchView? = null
-    var searchViewState: SearchViewState? = null
+    private var searchView: SearchView? = null
+    private var searchViewState: SearchViewState? = null
 
     @ProvidePresenter
-    fun providePresenter() = App.getComponent(requireContext()).createSharesPresenter()
+    fun providePresenter() = App.component(requireContext()).createSharesPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +112,7 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
 
     override fun showShares(shares: List<Share>) {
         adapter.setItems(shares)
-        zeroView.showOrHide(shares.isEmpty())
+        zeroView.isVisible = shares.isEmpty()
     }
 
     override fun showError(error: String) {
@@ -129,3 +125,5 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
     }
 
 }
+
+const val STATE_SEARCH_VIEW = "search_view"

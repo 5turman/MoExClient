@@ -1,5 +1,6 @@
 package org.example.moex.ui.shares
 
+import android.content.res.Resources
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import io.reactivex.Observable
@@ -10,6 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.example.moex.BuildConfig
+import org.example.moex.core.getMessage
 import org.example.moex.data.SharesRepository
 import org.example.moex.data.model.Share
 import java.util.concurrent.TimeUnit
@@ -19,8 +21,12 @@ import javax.inject.Inject
  * Created by 5turman on 22.03.2017.
  */
 @InjectViewState
-class SharesPresenter @Inject constructor(private val repo: SharesRepository)
-    : MvpPresenter<SharesContract.View>(), SharesContract.Presenter {
+class SharesPresenter
+@Inject constructor(
+    private val repo: SharesRepository,
+    private val res: Resources
+) :
+    MvpPresenter<SharesContract.View>(), SharesContract.Presenter {
 
     private val sharesSubject = PublishSubject.create<List<Share>>()
     private val querySubject = BehaviorSubject.createDefault<String>("")
@@ -31,30 +37,30 @@ class SharesPresenter @Inject constructor(private val repo: SharesRepository)
 
     override fun onFirstViewAttach() {
         queryDisposable = Observable.combineLatest(
-                sharesSubject,
-                querySubject
-                        .apply {
-                            // Temporary workaround to pass UI tests
-                            if (BuildConfig.FLAVOR != "mock") {
-                                debounce(400, TimeUnit.MILLISECONDS) // computation scheduler
-                            }
-                        }
-                        .map(String::trim)
-                        .distinctUntilChanged(),
-                BiFunction<List<Share>, String, List<Share>> { shares, query ->
-                    if (query.isEmpty()) {
-                        shares
-                    } else {
-                        shares.filter { share ->
-                            share.id.contains(query, true) || share.shortName.contains(query, true)
-                        }
+            sharesSubject,
+            querySubject
+                .apply {
+                    // Temporary workaround to pass UI tests
+                    if (BuildConfig.FLAVOR != "mock") {
+                        debounce(400, TimeUnit.MILLISECONDS) // computation scheduler
                     }
                 }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    viewState.showShares(it)
+                .map(String::trim)
+                .distinctUntilChanged(),
+            BiFunction<List<Share>, String, List<Share>> { shares, query ->
+                if (query.isEmpty()) {
+                    shares
+                } else {
+                    shares.filter { share ->
+                        share.id.contains(query, true) || share.shortName.contains(query, true)
+                    }
                 }
+            }
+        )
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                viewState.showShares(it)
+            }
 
     }
 
@@ -90,19 +96,18 @@ class SharesPresenter @Inject constructor(private val repo: SharesRepository)
         viewState.showRefreshing(true)
 
         repoDisposable = repo.getAll(forceUpdate)
-                .map { it.sortedBy { it.shortName } }
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate {
-                    viewState.showRefreshing(false)
+            .map { it.sortedBy { it.shortName } }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doAfterTerminate {
+                viewState.showRefreshing(false)
+            }
+            .subscribe(
+                { shares -> sharesSubject.onNext(shares) },
+                { error ->
+                    viewState.showError(res.getMessage(error))
                 }
-                .subscribe(
-                        { shares -> sharesSubject.onNext(shares) },
-                        { error ->
-                            val message = error.message ?: error.javaClass.simpleName
-                            viewState.showError(message)
-                        }
-                )
+            )
     }
 
 }

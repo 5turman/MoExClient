@@ -1,5 +1,6 @@
 package org.example.moex.ui.chart
 
+import android.arch.lifecycle.LifecycleObserver
 import org.example.moex.data.model.Share
 
 /**
@@ -11,7 +12,7 @@ interface ChartContract {
         fun add(tick: Share)
     }
 
-    interface Presenter : LifeCycle {
+    interface Presenter : LifecycleObserver {
         fun attachView(view: View)
         fun detachView()
     }

@@ -25,18 +25,10 @@ import javax.inject.Inject
  */
 class ShareActivity : AppCompatActivity() {
 
-    companion object {
-
-        val KEY_ID = "id"
-
-        fun newIntent(context: Context, shareId: String): Intent =
-                IntentFor<ShareActivity>(context).putExtra(KEY_ID, shareId)
-    }
-
     @Inject
     lateinit var api: Api
 
-    lateinit var disposable: Disposable
+    private lateinit var disposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,45 +38,45 @@ class ShareActivity : AppCompatActivity() {
             finish()
         }
 
-        App.getComponent(this).inject(this)
+        App.component(this).inject(this)
 
         setContentView(R.layout.activity_share)
 
         val fromTill = DateTimeFormat.forPattern("yyyy-MM-dd").print(LocalDate.now().minusDays(1))
 
         disposable = api.getCandles(shareId, fromTill, fromTill, Interval.HOUR)
-                .map { dto ->
-                    dto.candles.drop(1).mapIndexed { index, item ->
-                        CandleEntry(
-                                index.toFloat(),
-                                item.high.toFloat(),
-                                item.low.toFloat(),
-                                item.open.toFloat(),
-                                item.close.toFloat()
-                        )
-                    }
+            .map { dto ->
+                dto.candles.drop(1).mapIndexed { index, item ->
+                    CandleEntry(
+                        index.toFloat(),
+                        item.high.toFloat(),
+                        item.low.toFloat(),
+                        item.open.toFloat(),
+                        item.close.toFloat()
+                    )
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ entries: List<CandleEntry> ->
-                    val dataSet = CandleDataSet(entries, "Bla-bla-chart")
-                    dataSet.shadowColor = Color.BLACK
-                    dataSet.increasingColor = Color.GREEN
-                    dataSet.decreasingColor = Color.RED
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ entries: List<CandleEntry> ->
+                val dataSet = CandleDataSet(entries, "Bla-bla-chart")
+                dataSet.shadowColor = Color.BLACK
+                dataSet.increasingColor = Color.GREEN
+                dataSet.decreasingColor = Color.RED
 
-                    candleStickChart.data = CandleData(listOf(dataSet))
+                candleStickChart.data = CandleData(listOf(dataSet))
 
-                    candleStickChart.xAxis.isEnabled = false
-                    candleStickChart.axisLeft.isEnabled = false
-                    candleStickChart.axisRight.isEnabled = false
+                candleStickChart.xAxis.isEnabled = false
+                candleStickChart.axisLeft.isEnabled = false
+                candleStickChart.axisRight.isEnabled = false
 
-                    candleStickChart.description = null
-                    candleStickChart.legend.isEnabled = false
+                candleStickChart.description = null
+                candleStickChart.legend.isEnabled = false
 
-                    candleStickChart.isHighlightPerDragEnabled = false
-                    candleStickChart.isHighlightPerTapEnabled = false
+                candleStickChart.isHighlightPerDragEnabled = false
+                candleStickChart.isHighlightPerTapEnabled = false
 
-                    candleStickChart.invalidate()
-                })
+                candleStickChart.invalidate()
+            })
     }
 
     override fun onDestroy() {
@@ -92,4 +84,11 @@ class ShareActivity : AppCompatActivity() {
         disposable.dispose()
     }
 
+    companion object {
+        fun newIntent(context: Context, shareId: String): Intent =
+            IntentFor<ShareActivity>(context).putExtra(KEY_ID, shareId)
+    }
+
 }
+
+private const val KEY_ID = "id"

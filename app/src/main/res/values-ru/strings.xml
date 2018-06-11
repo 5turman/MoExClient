@@ -5,11 +5,10 @@
     <string name="title_shares">Акции</string>
 
     <string name="hint_search">Поиск</string>
-
     <string name="yesterday">вчера</string>
 
-    <string name="error_network">Ошибка сети</string>
-
+    <string name="no_connection">Нет соедиения</string>
     <string name="no_data">Нет данных</string>
+    <string name="error_receiving_data">Ошибка получения данных</string>
 
 </resources>

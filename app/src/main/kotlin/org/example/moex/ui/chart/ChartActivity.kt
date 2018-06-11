@@ -14,31 +14,22 @@ import org.example.moex.R
  */
 class ChartActivity : AppCompatActivity() {
 
-    companion object {
-
-        const val KEY_ID = "id"
-
-        fun newIntent(context: Context, shareId: String): Intent =
-                IntentFor<ChartActivity>(context).putExtra(KEY_ID, shareId)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_chart)
 
         val shareId = intent.getStringExtra(KEY_ID)
-        App.getComponent(this).chartComponent(ChartModule(shareId)).inject(chart)
+        App.component(this).chartComponent(ChartModule(shareId)).inject(chart)
+
+        lifecycle.addObserver(chart.presenter)
     }
 
-    override fun onStart() {
-        super.onStart()
-        chart.presenter.onStart()
-    }
-
-    override fun onStop() {
-        chart.presenter.onStop()
-        super.onStop()
+    companion object {
+        fun newIntent(context: Context, shareId: String): Intent =
+            IntentFor<ChartActivity>(context).putExtra(KEY_ID, shareId)
     }
 
 }
+
+private const val KEY_ID = "id"

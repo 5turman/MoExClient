@@ -19,24 +19,23 @@ class ApiModule {
 
     @Provides
     @PerApp
-    fun provideApi(): Api {
+    fun provideApi(): Api = buildRetrofit().create(Api::class.java)
 
-        val httpClient = OkHttpClient.Builder()
-                .addInterceptor(
-                        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-                )
-                .build()
+    private fun buildRetrofit() =
+        Retrofit.Builder()
+            .baseUrl("http://iss.moex.com/iss/")
+            .client(buildHttpClient())
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .addCallAdapterFactory(
+                RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
+            )
+            .build()
 
-        val retrofit = Retrofit.Builder()
-                .baseUrl("http://iss.moex.com/iss/")
-                .client(httpClient)
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .addCallAdapterFactory(
-                        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
-                )
-                .build()
-
-        return retrofit.create(Api::class.java)
-    }
+    private fun buildHttpClient() =
+        OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+            )
+            .build()
 
 }
