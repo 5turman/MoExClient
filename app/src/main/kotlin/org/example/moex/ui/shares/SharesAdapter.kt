@@ -2,11 +2,11 @@ package org.example.moex.ui.shares
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.pawegio.kandroid.find
 import org.example.moex.R
 import org.example.moex.core.BaseAdapter

@@ -1,6 +1,6 @@
 package org.example.moex.ui.chart
 
-import android.arch.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleObserver
 import org.example.moex.data.model.Share
 
 /**

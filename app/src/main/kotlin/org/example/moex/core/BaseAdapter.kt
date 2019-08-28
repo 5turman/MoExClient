@@ -1,6 +1,6 @@
 package org.example.moex.core
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by 5turman on 22.03.2017.

@@ -7,7 +7,6 @@ apply plugin: 'com.github.ben-manes.versions'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         applicationId "org.example.moex"
@@ -83,16 +82,16 @@ dependencies {
     implementation "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"
 
     // Android Support Libraries
-    implementation "com.android.support:appcompat-v7:${rootProject.supportLibraryVersion}"
-    implementation "com.android.support:recyclerview-v7:${rootProject.supportLibraryVersion}"
-    implementation "com.android.support:design:${rootProject.supportLibraryVersion}"
+    implementation "androidx.appcompat:appcompat:${rootProject.supportLibraryVersion}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.recyclerViewVersion}"
+
+    // Material
+    implementation "com.google.android.material:material:${rootProject.materialVersion}"
 
     // Room
-    implementation "android.arch.persistence.room:runtime:${rootProject.roomVersion}"
-    kapt "android.arch.persistence.room:compiler:${rootProject.roomVersion}"
-
-    // RxJava support for Room
-    implementation "android.arch.persistence.room:rxjava2:${rootProject.roomVersion}"
+    implementation "androidx.room:room-runtime:${rootProject.roomVersion}"
+    kapt "androidx.room:room-compiler:${rootProject.roomVersion}"
+    implementation "androidx.room:room-rxjava2:${rootProject.roomVersion}"
 
     // Joda Time for Android
     implementation "net.danlew:android.joda:${rootProject.androidJoda}"
@@ -115,7 +114,6 @@ dependencies {
 
     // Moxy
     implementation "com.arello-mobile:moxy:${rootProject.moxyVersion}"
-    implementation "com.arello-mobile:moxy-app-compat:${rootProject.moxyVersion}"
     kapt "com.arello-mobile:moxy-compiler:${rootProject.moxyVersion}"
 
     // MPAndroidChart
@@ -129,16 +127,9 @@ dependencies {
     }
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${rootProject.kotlinVersion}"
 
+
     // UI Testing
-    androidTestImplementation("com.android.support.test:runner:${rootProject.runnerVersion}", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestImplementation("com.android.support.test:rules:${rootProject.rulesVersion}", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    androidTestImplementation "androidx.test:core:${rootProject.testVersion}"
 }
 
 dexcount {

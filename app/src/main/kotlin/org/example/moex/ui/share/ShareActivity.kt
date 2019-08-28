@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
@@ -57,7 +57,7 @@ class ShareActivity : AppCompatActivity() {
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ entries: List<CandleEntry> ->
+            .subscribe { entries: List<CandleEntry> ->
                 val dataSet = CandleDataSet(entries, "Bla-bla-chart")
                 dataSet.shadowColor = Color.BLACK
                 dataSet.increasingColor = Color.GREEN
@@ -76,7 +76,7 @@ class ShareActivity : AppCompatActivity() {
                 candleStickChart.isHighlightPerTapEnabled = false
 
                 candleStickChart.invalidate()
-            })
+            }
     }
 
     override fun onDestroy() {

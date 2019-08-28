@@ -1,7 +1,7 @@
 package org.example.moex.ui.chart
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -26,9 +26,9 @@ class ChartPresenter @Inject constructor(
         println("onStart")
         disposable = repo.get(shareId)
             .retryWhen { errors ->
-                errors.flatMap({ error ->
+                errors.flatMap { error ->
                     Observable.timer(5, TimeUnit.SECONDS)
-                })
+                }
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { share ->

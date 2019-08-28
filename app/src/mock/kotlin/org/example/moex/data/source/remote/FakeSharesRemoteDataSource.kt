@@ -1,5 +1,7 @@
 package org.example.moex.data.source.remote
 
+import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
@@ -19,15 +21,15 @@ object FakeSharesRemoteDataSource : SharesDataSource {
         return Single.just(shares)
     }
 
-    override fun get(id: String): Single<Share> {
+    override fun get(id: String): Maybe<Share> {
         TODO("not implemented")
     }
 
-    override fun put(share: Share) {
+    override fun put(share: Share): Completable {
         TODO("not implemented")
     }
 
-    override fun put(shares: List<Share>) {
+    override fun put(shares: List<Share>): Completable {
         TODO("not implemented")
     }
 

@@ -1,22 +1,18 @@
 package org.example.moex.ui.shares
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import com.arellomobile.mvp.MvpAppCompatFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_shares.*
 import org.example.moex.App
 import org.example.moex.R
+import org.example.moex.core.MvpAppCompatFragment
 import org.example.moex.data.model.Share
 import org.example.moex.ui.chart.ChartActivity
 
@@ -51,11 +47,11 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View =
-        inflater.inflate(R.layout.fragment_shares, container, false)
+            inflater.inflate(R.layout.fragment_shares, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (activity as AppCompatActivity).apply {

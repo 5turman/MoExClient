@@ -13,6 +13,10 @@ object SharesRepositoryProxy : SharesRepository {
 
     private var proxyObject: SharesRepository? = null
 
+    override fun get(shareId: String, period: Int): Observable<Share> {
+        TODO("not implemented")
+    }
+
     override fun getAll(forceUpdate: Boolean): Observable<List<Share>> {
         if (proxyObject == null) {
             proxyObject = provider.get()

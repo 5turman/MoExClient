@@ -1,7 +1,7 @@
 package org.example.moex.data.source.db
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import org.example.moex.data.model.Share
 
 @Database(entities = [Share::class], version = 1, exportSchema = false)

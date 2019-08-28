@@ -1,7 +1,9 @@
 package org.example.moex.di.module
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
+import org.example.moex.core.QuotesStorage
 import org.example.moex.data.SharesRepository
 import org.example.moex.data.SharesRepositoryImpl
 import org.example.moex.data.SharesRepositoryProxy
@@ -10,6 +12,8 @@ import org.example.moex.data.source.local.FakeSharesLocalDataSource
 import org.example.moex.data.source.remote.FakeSharesRemoteDataSource
 import org.example.moex.di.qualifier.Local
 import org.example.moex.di.qualifier.Remote
+import org.example.moex.di.scope.PerApp
+import java.io.File
 import javax.inject.Provider
 
 /**
@@ -28,7 +32,7 @@ class DataModule {
 
     @Provides
     fun provideSharesRepository(provider: Provider<SharesRepositoryImpl>): SharesRepository =
-            SharesRepositoryProxy.apply { this.provider = provider }
+        SharesRepositoryProxy.apply { this.provider = provider }
 
     @Provides
     @PerApp
