@@ -23,7 +23,7 @@ class ApiModule {
 
     private fun buildRetrofit() =
         Retrofit.Builder()
-            .baseUrl("http://iss.moex.com/iss/")
+            .baseUrl("https://iss.moex.com/iss/")
             .client(buildHttpClient())
             .addConverterFactory(SimpleXmlConverterFactory.create())
             .addCallAdapterFactory(
