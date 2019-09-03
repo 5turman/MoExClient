@@ -37,6 +37,7 @@ ext {
     // App dependencies
     daggerVersion = '2.14.1'
     supportLibraryVersion = '1.0.2'
+    lifecycleExtensionsVersion = '2.0.0'
     materialVersion = '1.0.0'
     recyclerViewVersion = '1.0.0'
     ktxVersion = '1.0.2'

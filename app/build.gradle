@@ -81,9 +81,10 @@ dependencies {
     // KAndroid
     implementation "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"
 
-    // Android Support Libraries
+    // AndroidX Libraries
     implementation "androidx.appcompat:appcompat:${rootProject.supportLibraryVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.recyclerViewVersion}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.lifecycleExtensionsVersion}"
 
     // Material
     implementation "com.google.android.material:material:${rootProject.materialVersion}"
@@ -111,10 +112,6 @@ dependencies {
     // Rx
     implementation "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlinVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxAndroidVersion}"
-
-    // Moxy
-    implementation "com.arello-mobile:moxy:${rootProject.moxyVersion}"
-    kapt "com.arello-mobile:moxy-compiler:${rootProject.moxyVersion}"
 
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'

@@ -1,44 +1,47 @@
 package org.example.moex.ui.shares
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_shares.*
 import org.example.moex.App
 import org.example.moex.R
-import org.example.moex.core.MvpAppCompatFragment
+import org.example.moex.core.ResourceText
+import org.example.moex.core.bind
+import org.example.moex.core.getViewModel
 import org.example.moex.data.model.Share
-import org.example.moex.ui.chart.ChartActivity
+import org.example.moex.ui.share.ShareActivity
 
 /**
  * Created by 5turman on 22.03.2017.
  */
-class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
+class SharesFragment : Fragment() {
 
-    @InjectPresenter
-    lateinit var presenter: SharesPresenter
-
+    private lateinit var viewModel: SharesViewModel
     private lateinit var adapter: SharesAdapter
 
     private var searchView: SearchView? = null
     private var searchViewState: SearchViewState? = null
 
-    @ProvidePresenter
-    fun providePresenter() = App.component(requireContext()).createSharesPresenter()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val factory = App.component(requireContext()).sharesViewModelFactory()
+        viewModel = getViewModel(factory)
 
         adapter = SharesAdapter(object : SharesAdapter.Callback {
             override fun onClick(position: Int) {
                 val share = adapter.getItem(position)
-                presenter.onShareClick(share)
+                viewModel.onShareClick(share)
             }
         })
         searchViewState = savedInstanceState?.getParcelable(STATE_SEARCH_VIEW)
@@ -47,27 +50,14 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View =
-            inflater.inflate(R.layout.fragment_shares, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_shares, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (activity as AppCompatActivity).apply {
-            setSupportActionBar(toolbar)
-            setTitle(R.string.title_shares)
-        }
-
-        refreshLayout.setOnRefreshListener {
-            presenter.onRefresh()
-        }
-
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@SharesFragment.adapter
-        }
+        setupUI()
+        setupBindings()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -89,7 +79,7 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
             override fun onQueryTextSubmit(query: String) = false
 
             override fun onQueryTextChange(newText: String): Boolean {
-                presenter.onQueryTextChange(newText)
+                viewModel.onQueryTextChange(newText)
                 return true
             }
         })
@@ -102,22 +92,43 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
         this.searchView = searchView
     }
 
-    override fun showRefreshing(show: Boolean) {
-        refreshLayout.isRefreshing = show
+    private fun setupUI() {
+        (activity as AppCompatActivity).apply {
+            setSupportActionBar(toolbar)
+            setTitle(R.string.title_shares)
+        }
+
+        refreshLayout.setOnRefreshListener { viewModel.onRefresh() }
+
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = this@SharesFragment.adapter
+        }
     }
 
-    override fun showShares(shares: List<Share>) {
-        adapter.setItems(shares)
-        zeroView.isVisible = shares.isEmpty()
+    private fun setupBindings() {
+        bind(viewModel.refreshing()) { refreshLayout.isRefreshing = it }
+        bind(viewModel.shares()) { shares ->
+            adapter.setItems(shares)
+            zeroView.isVisible = shares.isEmpty()
+        }
+        bind(viewModel.commands()) { command ->
+            when (command) {
+                is ShowError -> showError(command.error)
+                is NavigateToShareScreen -> navigateToShareScreen(command.share)
+                else -> throw IllegalStateException("Unsupported command: $command")
+            }
+        }
     }
 
-    override fun showError(error: String) {
-        Snackbar.make(view!!, error, Snackbar.LENGTH_LONG).show()
+    private fun showError(error: ResourceText) {
+        Snackbar.make(view!!, error.invoke(requireContext()), Snackbar.LENGTH_LONG).show()
     }
 
-    override fun show(share: Share) {
-//        startActivity(ShareActivity.newIntent(context, share.id))
-        startActivity(ChartActivity.newIntent(context!!, share.id))
+    private fun navigateToShareScreen(share: Share) {
+        startActivity(ShareActivity.newIntent(requireContext(), share.id))
+//        startActivity(ChartActivity.newIntent(context!!, share.id))
     }
 
 }
