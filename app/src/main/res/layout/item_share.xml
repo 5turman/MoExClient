@@ -1,56 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:minHeight="88dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/shareName"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/primaryText"
-        android:textSize="16sp" />
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="88dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp">
 
-    <TextView
-        android:id="@+id/shareId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/shareName"
-        android:layout_below="@id/shareName"
-        android:textColor="@color/secondaryText"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/shareValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/primaryText"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/id_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_text_view"
+            android:layout_alignStart="@id/name_text_view"
+            android:textColor="@color/secondaryText"
+            android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/shareChange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/shareValue"
-        android:drawablePadding="4dp"
-        android:textColor="@color/secondaryText"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/primaryText"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/shareDateTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/shareChange"
-        android:textColor="@color/secondaryText"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/change_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/value_text_view"
+            android:layout_alignParentEnd="true"
+            android:drawablePadding="4dp"
+            android:textColor="@color/secondaryText"
+            android:textSize="14sp" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/date_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/change_text_view"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/secondaryText"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+</layout>

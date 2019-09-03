@@ -12,13 +12,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_shares.*
 import org.example.moex.App
 import org.example.moex.R
 import org.example.moex.core.ResourceText
 import org.example.moex.core.bind
 import org.example.moex.core.getViewModel
 import org.example.moex.data.model.Share
+import org.example.moex.databinding.FragmentSharesBinding
 import org.example.moex.ui.share.ShareActivity
 
 /**
@@ -53,11 +53,15 @@ class SharesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_shares, container, false)
+    ): View = FragmentSharesBinding.inflate(inflater, container, false).run {
+        setupUI(this)
+        setupBindings(this)
+        root
+    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupUI()
-        setupBindings()
+    override fun onDestroyView() {
+        searchView = null
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -92,26 +96,24 @@ class SharesFragment : Fragment() {
         this.searchView = searchView
     }
 
-    private fun setupUI() {
-        (activity as AppCompatActivity).apply {
-            setSupportActionBar(toolbar)
-            setTitle(R.string.title_shares)
-        }
+    private fun setupUI(binding: FragmentSharesBinding) {
+        binding.apply {
+            toolbar.setTitle(R.string.title_shares)
+            (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
-        refreshLayout.setOnRefreshListener { viewModel.onRefresh() }
+            refreshLayout.setOnRefreshListener { viewModel.onRefresh() }
 
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@SharesFragment.adapter
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.adapter = adapter
         }
     }
 
-    private fun setupBindings() {
-        bind(viewModel.refreshing()) { refreshLayout.isRefreshing = it }
+    private fun setupBindings(binding: FragmentSharesBinding) {
+        bind(viewModel.refreshing()) { binding.refreshLayout.isRefreshing = it }
         bind(viewModel.shares()) { shares ->
             adapter.setItems(shares)
-            zeroView.isVisible = shares.isEmpty()
+            binding.zeroView.isVisible = shares.isEmpty()
         }
         bind(viewModel.commands()) { command ->
             when (command) {
@@ -133,4 +135,4 @@ class SharesFragment : Fragment() {
 
 }
 
-const val STATE_SEARCH_VIEW = "search_view"
+private const val STATE_SEARCH_VIEW = "search_view"

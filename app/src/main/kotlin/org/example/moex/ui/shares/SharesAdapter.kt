@@ -2,17 +2,16 @@ package org.example.moex.ui.shares
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.pawegio.kandroid.find
 import org.example.moex.R
 import org.example.moex.core.BaseAdapter
 import org.example.moex.core.inflate
 import org.example.moex.core.toFPx
 import org.example.moex.data.model.Share
+import org.example.moex.databinding.ItemShareBinding
 
 /**
  * Created by 5turman on 23.03.2017.
@@ -35,24 +34,23 @@ class SharesAdapter(private val callback: Callback) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.itemView.context
         val share = getItem(position)
-        holder.name.text = share.shortName
-        holder.id.text = share.id
-        holder.value.text = share.last.toString()
-        holder.change.apply {
-            text = share.lastToPrev.toString()
-            setCompoundDrawablesWithIntrinsicBounds(
-                getDrawable(context, share.lastToPrev), null, null, null
-            )
+        holder.binding.apply {
+            nameTextView.text = share.shortName
+            idTextView.text = share.id
+            valueTextView.text = share.last.toString()
+            changeTextView.apply {
+                text = share.lastToPrev.toString()
+                setCompoundDrawablesWithIntrinsicBounds(
+                    getDrawable(context, share.lastToPrev), null, null, null
+                )
+            }
+            dateTimeTextView.text = TimeFormatter.format(context, share.timestamp)
         }
-        holder.dateTime.text = TimeFormatter.format(context, share.timestamp)
     }
 
     class ViewHolder(itemView: View, callback: Callback) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.find<TextView>(R.id.shareName)
-        val id = itemView.find<TextView>(R.id.shareId)
-        val value = itemView.find<TextView>(R.id.shareValue)
-        val change = itemView.find<TextView>(R.id.shareChange)
-        val dateTime = itemView.find<TextView>(R.id.shareDateTime)
+
+        val binding = ItemShareBinding.bind(itemView)!!
 
         init {
             itemView.setOnClickListener {
