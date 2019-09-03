@@ -57,25 +57,29 @@ class ShareActivity : AppCompatActivity() {
                 }
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { entries: List<CandleEntry> ->
-                val dataSet = CandleDataSet(entries, "Bla-bla-chart")
-                dataSet.shadowColor = Color.BLACK
-                dataSet.increasingColor = Color.GREEN
-                dataSet.decreasingColor = Color.RED
+            .subscribe { entries, error ->
+                if (entries != null) {
+                    val dataSet = CandleDataSet(entries, "Bla-bla-chart")
+                    dataSet.shadowColor = Color.BLACK
+                    dataSet.increasingColor = Color.GREEN
+                    dataSet.decreasingColor = Color.RED
 
-                candleStickChart.data = CandleData(listOf(dataSet))
+                    candleStickChart.data = CandleData(listOf(dataSet))
 
-                candleStickChart.xAxis.isEnabled = false
-                candleStickChart.axisLeft.isEnabled = false
-                candleStickChart.axisRight.isEnabled = false
+                    candleStickChart.xAxis.isEnabled = false
+                    candleStickChart.axisLeft.isEnabled = false
+                    candleStickChart.axisRight.isEnabled = false
 
-                candleStickChart.description = null
-                candleStickChart.legend.isEnabled = false
+                    candleStickChart.description = null
+                    candleStickChart.legend.isEnabled = false
 
-                candleStickChart.isHighlightPerDragEnabled = false
-                candleStickChart.isHighlightPerTapEnabled = false
+                    candleStickChart.isHighlightPerDragEnabled = false
+                    candleStickChart.isHighlightPerTapEnabled = false
 
-                candleStickChart.invalidate()
+                    candleStickChart.invalidate()
+                }
+                // show error
+                error?.printStackTrace()
             }
     }
 
