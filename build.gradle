@@ -11,8 +11,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
-        // https://github.com/ben-manes/gradle-versions-plugin
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     }
 }
 
@@ -36,17 +34,17 @@ ext {
 
     // App dependencies
     daggerVersion = '2.14.1'
-    supportLibraryVersion = '1.0.2'
-    lifecycleExtensionsVersion = '2.0.0'
+    appcompatVersion = '1.1.0'
+    lifecycleExtensionsVersion = '2.1.0'
     materialVersion = '1.0.0'
     recyclerViewVersion = '1.0.0'
-    ktxVersion = '1.0.2'
+    ktxVersion = '1.1.0'
     kAndroidVersion = '0.6.15'
     androidJoda = '2.9.9.1'
     okHttpVersion = '3.9.1'
     retrofitVersion = '2.3.0'
     rxKotlinVersion = '2.2.0'
-    rxAndroidVersion = '2.0.2'
+    rxAndroidVersion = '2.1.1'
     moxyVersion = '1.5.3'
     roomVersion = '2.1.0'
 
