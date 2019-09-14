@@ -82,7 +82,7 @@ class SharesViewModel
         querySubject.onNext(query)
     }
 
-    fun onShareClick(share: Share) {
+    fun onShareClicked(share: Share) {
         commandLiveData.add(NavigateToShareScreen(share))
     }
 

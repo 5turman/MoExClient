@@ -37,11 +37,9 @@ class SharesFragment : Fragment() {
 
         val factory = App.component(requireContext()).sharesViewModelFactory()
         viewModel = getViewModel(factory)
-
-        adapter = SharesAdapter(object : SharesAdapter.Callback {
-            override fun onClick(position: Int) {
-                val share = adapter.getItem(position)
-                viewModel.onShareClick(share)
+        adapter = SharesAdapter(object: SharesAdapter.Callback {
+            override fun onShareClicked(share: Share) {
+                viewModel.onShareClicked(share)
             }
         })
         searchViewState = savedInstanceState?.getParcelable(STATE_SEARCH_VIEW)
