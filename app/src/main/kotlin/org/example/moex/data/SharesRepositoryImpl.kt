@@ -18,7 +18,7 @@ class SharesRepositoryImpl constructor(
     SharesRepository {
 
     @Volatile
-    private var cache = emptyMap<String, Share>()
+    private var cache = mutableMapOf<String, Share>()
 
     override fun getAll(forceUpdate: Boolean): Observable<List<Share>> {
         if (cache.isNotEmpty()) {
@@ -53,7 +53,7 @@ class SharesRepositoryImpl constructor(
         remoteDataSource.get(shareId)
             .repeatWhen { source -> source.delay(period.toLong(), TimeUnit.SECONDS) }
             .doOnNext { share ->
-                cache += (share.id to share)
+                cache[share.id] = share
                 localDataSource.put(share).blockingAwait()
                 quotesStorage.getWriter(shareId).use {
                     it.write(share.last, share.timestamp)
@@ -68,7 +68,7 @@ class SharesRepositoryImpl constructor(
             }
             .toObservable()
 
-    private fun buildMap(shares: List<Share>): Map<String, Share> {
+    private fun buildMap(shares: List<Share>): MutableMap<String, Share> {
         val map = mutableMapOf<String, Share>()
         shares.forEach {
             map[it.id] = it
