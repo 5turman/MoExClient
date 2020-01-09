@@ -5,18 +5,14 @@ import io.reactivex.schedulers.Schedulers
 import org.example.moex.core.QuotesStorage
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
-import org.example.moex.di.qualifier.Local
-import org.example.moex.di.qualifier.Remote
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 22.03.2017.
  */
-class SharesRepositoryImpl
-@Inject constructor(
-    @Local private val localDataSource: SharesDataSource,
-    @Remote private val remoteDataSource: SharesDataSource,
+class SharesRepositoryImpl constructor(
+    private val localDataSource: SharesDataSource,
+    private val remoteDataSource: SharesDataSource,
     private val quotesStorage: QuotesStorage
 ) :
     SharesRepository {

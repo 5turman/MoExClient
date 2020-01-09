@@ -11,14 +11,12 @@ import org.example.moex.core.Ring
 import org.example.moex.core.toFPx
 import org.example.moex.core.toPx
 import org.example.moex.data.model.Share
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 6/2/2017.
  */
 class ChartView : View, ChartContract.View {
 
-    @Inject
     lateinit var presenter: ChartContract.Presenter
 
     private val ring = Ring<Share>(10)

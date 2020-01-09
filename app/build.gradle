@@ -76,10 +76,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
     implementation "androidx.core:core-ktx:${rootProject.ktxVersion}"
 
-    // Dagger
-    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
-    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
-    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    // Koin
+    implementation "org.koin:koin-android:${rootProject.koinVersion}"
+    implementation "org.koin:koin-android-viewmodel:${rootProject.koinVersion}"
 
     // KAndroid
     implementation "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"

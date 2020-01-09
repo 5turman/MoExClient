@@ -7,15 +7,11 @@ import io.reactivex.schedulers.Schedulers
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
 import org.example.moex.data.source.db.ShareDao
-import org.example.moex.di.scope.PerApp
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 29.03.2017.
  */
-@PerApp
-class SharesLocalDataSource
-@Inject constructor(private val dao: ShareDao) : SharesDataSource {
+class SharesLocalDataSource constructor(private val dao: ShareDao) : SharesDataSource {
 
     override fun get(id: String): Maybe<Share> = dao.get(id).subscribeOn(Schedulers.io())
 

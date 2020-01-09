@@ -8,15 +8,13 @@ import org.example.moex.api.ApiErrorHandler
 import org.example.moex.data.SharesBuilder
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
-import org.example.moex.di.scope.PerApp
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 29.03.2017.
  */
-@PerApp
-class SharesRemoteDataSource @Inject constructor(
-    private val api: Api, private val errorHandler: ApiErrorHandler
+class SharesRemoteDataSource constructor(
+    private val api: Api,
+    private val errorHandler: ApiErrorHandler
 ) : SharesDataSource {
 
     override fun getAll(): Single<List<Share>> =

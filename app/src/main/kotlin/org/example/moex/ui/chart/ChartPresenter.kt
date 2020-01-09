@@ -7,12 +7,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import org.example.moex.data.SharesRepository
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 6/2/2017.
  */
-class ChartPresenter @Inject constructor(
+class ChartPresenter constructor(
     val shareId: String,
     val repo: SharesRepository
 ) : ChartContract.Presenter {

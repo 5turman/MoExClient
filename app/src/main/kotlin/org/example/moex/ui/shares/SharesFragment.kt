@@ -12,21 +12,20 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import org.example.moex.App
 import org.example.moex.R
 import org.example.moex.core.ResourceText
 import org.example.moex.core.bind
-import org.example.moex.core.getViewModel
 import org.example.moex.data.model.Share
 import org.example.moex.databinding.FragmentSharesBinding
 import org.example.moex.ui.share.ShareActivity
+import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
  * Created by 5turman on 22.03.2017.
  */
 class SharesFragment : Fragment() {
 
-    private lateinit var viewModel: SharesViewModel
+    private val vm: SharesViewModel by viewModel()
     private lateinit var adapter: SharesAdapter
 
     private var searchView: SearchView? = null
@@ -35,11 +34,9 @@ class SharesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val factory = App.component(requireContext()).sharesViewModelFactory()
-        viewModel = getViewModel(factory)
-        adapter = SharesAdapter(object: SharesAdapter.Callback {
+        adapter = SharesAdapter(object : SharesAdapter.Callback {
             override fun onShareClicked(share: Share) {
-                viewModel.onShareClicked(share)
+                vm.onShareClicked(share)
             }
         })
         searchViewState = savedInstanceState?.getParcelable(STATE_SEARCH_VIEW)
@@ -81,7 +78,7 @@ class SharesFragment : Fragment() {
             override fun onQueryTextSubmit(query: String) = false
 
             override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.onQueryTextChange(newText)
+                vm.onQueryTextChange(newText)
                 return true
             }
         })
@@ -99,7 +96,7 @@ class SharesFragment : Fragment() {
             toolbar.setTitle(R.string.title_shares)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
-            refreshLayout.setOnRefreshListener { viewModel.onRefresh() }
+            refreshLayout.setOnRefreshListener { vm.onRefresh() }
 
             recyclerView.layoutManager = LinearLayoutManager(context)
             recyclerView.setHasFixedSize(true)
@@ -108,12 +105,12 @@ class SharesFragment : Fragment() {
     }
 
     private fun setupBindings(binding: FragmentSharesBinding) {
-        bind(viewModel.refreshing()) { binding.refreshLayout.isRefreshing = it }
-        bind(viewModel.shares()) { shares ->
+        bind(vm.refreshing()) { binding.refreshLayout.isRefreshing = it }
+        bind(vm.shares()) { shares ->
             adapter.setItems(shares)
             binding.zeroView.isVisible = shares.isEmpty()
         }
-        bind(viewModel.commands()) { command ->
+        bind(vm.commands()) { command ->
             when (command) {
                 is ShowError -> showError(command.error)
                 is NavigateToShareScreen -> navigateToShareScreen(command.share)

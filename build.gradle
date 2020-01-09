@@ -33,7 +33,7 @@ ext {
     compileSdkVersion = 28
 
     // App dependencies
-    daggerVersion = '2.14.1'
+    koinVersion = '2.0.1'
     appcompatVersion = '1.1.0'
     lifecycleExtensionsVersion = '2.1.0'
     materialVersion = '1.0.0'

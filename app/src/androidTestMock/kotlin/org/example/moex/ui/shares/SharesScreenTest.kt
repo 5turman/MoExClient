@@ -11,7 +11,6 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.example.moex.R
 import org.example.moex.api.NetworkException
-import org.example.moex.data.SharesRepositoryProxy
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.local.FakeSharesLocalDataSource
 import org.example.moex.data.source.remote.FakeSharesRemoteDataSource
@@ -37,7 +36,6 @@ class SharesScreenTest {
     fun cleanUp() {
         FakeSharesLocalDataSource.reset()
         FakeSharesRemoteDataSource.reset()
-        SharesRepositoryProxy.reset()
     }
 
     @Test

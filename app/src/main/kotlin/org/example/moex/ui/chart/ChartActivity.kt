@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.pawegio.kandroid.IntentFor
-import kotlinx.android.synthetic.main.activity_chart.*
-import org.example.moex.App
 import org.example.moex.R
+import org.example.moex.databinding.ActivityChartBinding
+import org.koin.android.ext.android.get
 
 /**
  * Created by 5turman on 6/2/2017.
@@ -17,12 +18,13 @@ class ChartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_chart)
+        val binding: ActivityChartBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_chart)
 
         val shareId = intent.getStringExtra(KEY_ID)
-        App.component(this).chartComponent(ChartModule(shareId)).inject(chart)
-
-        lifecycle.addObserver(chart.presenter)
+        val presenter = ChartPresenter(shareId, get())
+        binding.chart.presenter = presenter
+        lifecycle.addObserver(presenter)
     }
 
     companion object {

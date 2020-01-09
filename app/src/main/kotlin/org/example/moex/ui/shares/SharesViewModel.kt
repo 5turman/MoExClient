@@ -17,13 +17,11 @@ import org.example.moex.core.getMessage
 import org.example.moex.data.SharesRepository
 import org.example.moex.data.model.Share
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by 5turman on 22.03.2017.
  */
-class SharesViewModel
-@Inject constructor(
+class SharesViewModel constructor(
     private val repo: SharesRepository
 ) : ViewModel() {
 

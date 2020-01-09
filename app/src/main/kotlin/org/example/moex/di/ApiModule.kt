@@ -1,27 +1,24 @@
-package org.example.moex.di.module
+package org.example.moex.di
 
-import dagger.Module
-import dagger.Provides
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.example.moex.api.Api
-import org.example.moex.di.scope.PerApp
+import org.example.moex.api.ApiErrorHandler
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
-/**
- * Created by 5turman on 23.03.2017.
- */
-@Module
-class ApiModule {
+val apiModule = module {
+    fun buildHttpClient() =
+        OkHttpClient.Builder()
+            .addInterceptor(
+                HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+            )
+            .build()
 
-    @Provides
-    @PerApp
-    fun provideApi(): Api = buildRetrofit().create(Api::class.java)
-
-    private fun buildRetrofit() =
+    fun buildRetrofit() =
         Retrofit.Builder()
             .baseUrl("https://iss.moex.com/iss/")
             .client(buildHttpClient())
@@ -31,11 +28,6 @@ class ApiModule {
             )
             .build()
 
-    private fun buildHttpClient() =
-        OkHttpClient.Builder()
-            .addInterceptor(
-                HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-            )
-            .build()
-
+    single { buildRetrofit().create(Api::class.java) }
+    single { ApiErrorHandler() }
 }

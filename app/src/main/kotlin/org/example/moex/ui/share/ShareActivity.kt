@@ -12,21 +12,19 @@ import com.pawegio.kandroid.IntentFor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_share.*
-import org.example.moex.App
 import org.example.moex.R
 import org.example.moex.api.Api
 import org.example.moex.data.model.Interval
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
 /**
  * Created by 5turman on 6/1/2017.
  */
 class ShareActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var api: Api
+    private val api: Api by inject()
 
     private lateinit var disposable: Disposable
 
@@ -37,8 +35,6 @@ class ShareActivity : AppCompatActivity() {
         if (shareId == null) {
             finish()
         }
-
-        App.component(this).inject(this)
 
         setContentView(R.layout.activity_share)
 
