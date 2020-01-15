@@ -12,15 +12,15 @@ import org.example.moex.data.model.Share
 interface ShareDao {
 
     @Query("SELECT * FROM shares")
-    fun getAll(): Single<List<Share>>
+    suspend fun getAll(): List<Share>
 
     @Query("SELECT * FROM shares WHERE id = :id")
-    fun get(id: String): Maybe<Share>
+    suspend fun get(id: String): Share?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun put(share: Share)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun put(shares: List<Share>)
+    suspend fun put(shares: List<Share>)
 
 }

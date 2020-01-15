@@ -40,48 +40,48 @@ class ShareActivity : AppCompatActivity() {
 
         val fromTill = DateTimeFormat.forPattern("yyyy-MM-dd").print(LocalDate.now().minusDays(1))
 
-        disposable = api.getCandles(shareId, fromTill, fromTill, Interval.HOUR)
-            .map { dto ->
-                dto.candles.drop(1).mapIndexed { index, item ->
-                    CandleEntry(
-                        index.toFloat(),
-                        item.high.toFloat(),
-                        item.low.toFloat(),
-                        item.open.toFloat(),
-                        item.close.toFloat()
-                    )
-                }
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { entries, error ->
-                if (entries != null) {
-                    val dataSet = CandleDataSet(entries, "Bla-bla-chart")
-                    dataSet.shadowColor = Color.BLACK
-                    dataSet.increasingColor = Color.GREEN
-                    dataSet.decreasingColor = Color.RED
-
-                    candleStickChart.data = CandleData(listOf(dataSet))
-
-                    candleStickChart.xAxis.isEnabled = false
-                    candleStickChart.axisLeft.isEnabled = false
-                    candleStickChart.axisRight.isEnabled = false
-
-                    candleStickChart.description = null
-                    candleStickChart.legend.isEnabled = false
-
-                    candleStickChart.isHighlightPerDragEnabled = false
-                    candleStickChart.isHighlightPerTapEnabled = false
-
-                    candleStickChart.invalidate()
-                }
-                // show error
-                error?.printStackTrace()
-            }
+//        disposable = api.getCandles(shareId, fromTill, fromTill, Interval.HOUR)
+//            .map { dto ->
+//                dto.candles.drop(1).mapIndexed { index, item ->
+//                    CandleEntry(
+//                        index.toFloat(),
+//                        item.high.toFloat(),
+//                        item.low.toFloat(),
+//                        item.open.toFloat(),
+//                        item.close.toFloat()
+//                    )
+//                }
+//            }
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { entries, error ->
+//                if (entries != null) {
+//                    val dataSet = CandleDataSet(entries, "Bla-bla-chart")
+//                    dataSet.shadowColor = Color.BLACK
+//                    dataSet.increasingColor = Color.GREEN
+//                    dataSet.decreasingColor = Color.RED
+//
+//                    candleStickChart.data = CandleData(listOf(dataSet))
+//
+//                    candleStickChart.xAxis.isEnabled = false
+//                    candleStickChart.axisLeft.isEnabled = false
+//                    candleStickChart.axisRight.isEnabled = false
+//
+//                    candleStickChart.description = null
+//                    candleStickChart.legend.isEnabled = false
+//
+//                    candleStickChart.isHighlightPerDragEnabled = false
+//                    candleStickChart.isHighlightPerTapEnabled = false
+//
+//                    candleStickChart.invalidate()
+//                }
+//                // show error
+//                error?.printStackTrace()
+//            }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        disposable.dispose()
+//        disposable.dispose()
     }
 
     companion object {

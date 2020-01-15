@@ -1,79 +1,41 @@
 package org.example.moex.data
 
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
-import org.example.moex.core.QuotesStorage
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by 5turman on 22.03.2017.
  */
 class SharesRepositoryImpl constructor(
     private val localDataSource: SharesDataSource,
-    private val remoteDataSource: SharesDataSource,
-    private val quotesStorage: QuotesStorage
-) :
-    SharesRepository {
+    private val remoteDataSource: SharesDataSource
+) : SharesRepository {
 
-    @Volatile
-    private var cache = mutableMapOf<String, Share>()
-
-    override fun getAll(forceUpdate: Boolean): Observable<List<Share>> {
-        if (cache.isNotEmpty()) {
-            var observable = Observable.just(cache.values.toList())
-
-            if (forceUpdate) {
-                observable = observable
-                    .concatWith(
-                        loadSharesByApi().doOnNext { shares ->
-                            cache = buildMap(shares)
-                        }
-                    ).subscribeOn(Schedulers.io())
+    override suspend fun getAll(forceUpdate: Boolean): List<Share> {
+        if (!forceUpdate) {
+            val localShares = localDataSource.getAll()
+            if (localShares.isNotEmpty()) {
+                return localShares
             }
-
-            return observable
         }
-        return localDataSource.getAll()
-            .flatMapObservable { shares ->
-                when {
-                    shares.isEmpty() -> loadSharesByApi()
-                    forceUpdate -> Observable.just(shares).concatWith(loadSharesByApi())
-                    else -> Observable.just(shares)
-                }
-            }
-            .doOnNext { shares ->
-                cache = buildMap(shares)
-            }
-            .subscribeOn(Schedulers.io())
+
+        return remoteDataSource.getAll().also {
+            localDataSource.put(it)
+        }
     }
 
     override fun get(shareId: String, period: Int): Observable<Share> =
-        remoteDataSource.get(shareId)
-            .repeatWhen { source -> source.delay(period.toLong(), TimeUnit.SECONDS) }
-            .doOnNext { share ->
-                cache[share.id] = share
-                localDataSource.put(share).blockingAwait()
-                quotesStorage.getWriter(shareId).use {
-                    it.write(share.last, share.timestamp)
-                }
-            }
-            .toObservable()
-
-    private fun loadSharesByApi() =
-        remoteDataSource.getAll()
-            .doOnSuccess { shares ->
-                localDataSource.put(shares).blockingAwait()
-            }
-            .toObservable()
-
-    private fun buildMap(shares: List<Share>): MutableMap<String, Share> {
-        val map = mutableMapOf<String, Share>()
-        shares.forEach {
-            map[it.id] = it
-        }
-        return map
-    }
+        Observable.empty()
+//        remoteDataSource.get(shareId)
+//            .repeatWhen { source -> source.delay(period.toLong(), TimeUnit.SECONDS) }
+//            .doOnNext { share ->
+//                cache[share.id] = share
+//                localDataSource.put(share).blockingAwait()
+//                quotesStorage.getWriter(shareId).use {
+//                    it.write(share.last, share.timestamp)
+//                }
+//            }
+//            .toObservable()
 
 }

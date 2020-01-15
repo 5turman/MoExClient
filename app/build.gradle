@@ -5,6 +5,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
+
     compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
@@ -72,13 +77,14 @@ android {
 }
 
 dependencies {
+    implementation libraries
+    kapt librariesKapt
+
+    testImplementation testLibraries
+
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
     implementation "androidx.core:core-ktx:${rootProject.ktxVersion}"
-
-    // Koin
-    implementation "org.koin:koin-android:${rootProject.koinVersion}"
-    implementation "org.koin:koin-android-viewmodel:${rootProject.koinVersion}"
 
     // KAndroid
     implementation "com.pawegio.kandroid:kandroid:${rootProject.kAndroidVersion}@aar"
@@ -86,15 +92,9 @@ dependencies {
     // AndroidX Libraries
     implementation "androidx.appcompat:appcompat:${rootProject.appcompatVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.recyclerViewVersion}"
-    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.lifecycleExtensionsVersion}"
 
     // Material
     implementation "com.google.android.material:material:${rootProject.materialVersion}"
-
-    // Room
-    implementation "androidx.room:room-runtime:${rootProject.roomVersion}"
-    kapt "androidx.room:room-compiler:${rootProject.roomVersion}"
-    implementation "androidx.room:room-rxjava2:${rootProject.roomVersion}"
 
     // Joda Time for Android
     implementation "net.danlew:android.joda:${rootProject.androidJoda}"
@@ -109,7 +109,6 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofitVersion}"
 
     // Rx
     implementation "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlinVersion}"
@@ -119,13 +118,8 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     // Unit Testing
-    testImplementation "junit:junit:${rootProject.junitVersion}"
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${rootProject.kotlinVersion}"
-    testImplementation("com.nhaarman:mockito-kotlin:${rootProject.kotlinMockitoVersion}") {
-        exclude group: 'org.jetbrains.kotlin'
-    }
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${rootProject.kotlinVersion}"
-
 
     // UI Testing
     androidTestImplementation "androidx.test:core:${rootProject.testVersion}"

@@ -25,7 +25,7 @@ class ChartPresenter constructor(
         println("onStart")
         disposable = repo.get(shareId)
             .retryWhen { errors ->
-                errors.flatMap { error ->
+                errors.flatMap {
                     Observable.timer(5, TimeUnit.SECONDS)
                 }
             }

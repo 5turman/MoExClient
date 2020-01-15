@@ -3,12 +3,13 @@ package org.example.moex.ui.shares
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.example.moex.BuildConfig
 import org.example.moex.core.ResourceText
 import org.example.moex.core.commands.Command
@@ -58,12 +59,12 @@ class SharesViewModel constructor(
             sharesLiveData.value = it
         }
 
-    private var repoDisposable: Disposable? = null
+    private var loadSharesJob: Job? = null
 
     fun refreshing(): LiveData<Boolean> = refreshingLiveData
 
     fun shares(): LiveData<List<Share>> {
-        if (repoDisposable == null) {
+        if (loadSharesJob == null) {
             loadShares(false)
         }
         return sharesLiveData
@@ -72,7 +73,7 @@ class SharesViewModel constructor(
     fun commands(): LiveData<Command> = commandLiveData
 
     fun onRefresh() {
-        repoDisposable?.dispose()
+        loadSharesJob?.cancel()
         loadShares(true)
     }
 
@@ -87,23 +88,19 @@ class SharesViewModel constructor(
     private fun loadShares(forceUpdate: Boolean) {
         refreshingLiveData.value = true
 
-        repoDisposable = repo.getAll(forceUpdate)
-            .map { it.sortedBy { share -> share.shortName } }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doAfterTerminate {
+        loadSharesJob = viewModelScope.launch {
+            try {
+                val shares = repo.getAll(forceUpdate).sortedBy { it.shortName }
+                sharesSubject.onNext(shares)
+            } catch (e: Throwable) {
+                commandLiveData.add(ShowError { getMessage(e) })
+            } finally {
                 refreshingLiveData.value = false
             }
-            .subscribe(
-                { shares -> sharesSubject.onNext(shares) },
-                { error ->
-                    commandLiveData.add(ShowError { getMessage(error) })
-                }
-            )
+        }
     }
 
     override fun onCleared() {
-        repoDisposable?.dispose()
         queryDisposable.dispose()
     }
 }

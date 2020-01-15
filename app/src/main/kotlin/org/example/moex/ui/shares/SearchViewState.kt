@@ -10,7 +10,7 @@ class SearchViewState(val isIconified: Boolean, val query: String) : Parcelable 
 
     constructor(source: Parcel) : this(
             source.readInt() != 0,
-            source.readString()
+            source.readString().orEmpty()
     )
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

@@ -9,8 +9,6 @@ import org.example.moex.data.source.SharesDataSource
 import org.example.moex.data.source.db.AppDatabase
 import org.example.moex.data.source.local.SharesLocalDataSource
 import org.example.moex.data.source.remote.SharesRemoteDataSource
-import org.example.moex.di.local
-import org.example.moex.di.remote
 import org.koin.dsl.module
 import java.io.File
 
@@ -19,13 +17,12 @@ val dataModule = module {
     factory { get<AppDatabase>().shareDao() }
 
     single<SharesDataSource>(qualifier = local) { SharesLocalDataSource(get()) }
-    single<SharesDataSource>(qualifier = remote) { SharesRemoteDataSource(get(), get()) }
+    single<SharesDataSource>(qualifier = remote) { SharesRemoteDataSource(get()) }
 
     single<SharesRepository> {
         SharesRepositoryImpl(
             get(qualifier = local),
-            get(qualifier = remote),
-            get()
+            get(qualifier = remote)
         )
     }
 

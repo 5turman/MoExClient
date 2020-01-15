@@ -8,7 +8,7 @@ import org.example.moex.data.model.Share
  */
 interface SharesRepository {
 
-    fun getAll(forceUpdate: Boolean): Observable<List<Share>>
+    suspend fun getAll(forceUpdate: Boolean): List<Share>
 
     /**
      * @param period in seconds
