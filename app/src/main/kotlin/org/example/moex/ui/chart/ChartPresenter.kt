@@ -2,9 +2,6 @@ package org.example.moex.ui.chart
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import org.example.moex.data.SharesRepository
 import java.util.concurrent.TimeUnit
 
@@ -18,27 +15,24 @@ class ChartPresenter constructor(
 
     private var view: ChartContract.View? = null
 
-    private var disposable: Disposable? = null
-
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
         println("onStart")
-        disposable = repo.get(shareId)
-            .retryWhen { errors ->
-                errors.flatMap {
-                    Observable.timer(5, TimeUnit.SECONDS)
-                }
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { share ->
-                view?.add(share)
-            }
+//        disposable = repo.get(shareId)
+//            .retryWhen { errors ->
+//                errors.flatMap {
+//                    Observable.timer(5, TimeUnit.SECONDS)
+//                }
+//            }
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { share ->
+//                view?.add(share)
+//            }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun onStop() {
         println("onStop")
-        disposable?.dispose()
     }
 
     override fun attachView(view: ChartContract.View) {

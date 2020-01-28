@@ -18,7 +18,6 @@ import org.example.moex.core.bind
 import org.example.moex.data.model.Share
 import org.example.moex.databinding.FragmentSharesBinding
 import org.example.moex.ui.share.ShareActivity
-import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**

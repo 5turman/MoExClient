@@ -9,8 +9,6 @@ import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.pawegio.kandroid.IntentFor
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_share.*
 import org.example.moex.R
 import org.example.moex.api.Api
@@ -25,8 +23,6 @@ import org.koin.android.ext.android.inject
 class ShareActivity : AppCompatActivity() {
 
     private val api: Api by inject()
-
-    private lateinit var disposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -5,12 +5,15 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
-    compileOptions {
-        targetCompatibility = "8"
-        sourceCompatibility = "8"
-    }
-
     compileSdkVersion rootProject.compileSdkVersion
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 
     defaultConfig {
         applicationId "org.example.moex"
@@ -21,7 +24,7 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     dataBinding {
@@ -81,6 +84,7 @@ dependencies {
     kapt librariesKapt
 
     testImplementation testLibraries
+    androidTestImplementation androidTestLibraries
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${rootProject.kotlinVersion}"
@@ -110,19 +114,12 @@ dependencies {
         exclude group: 'stax', module: 'stax'
     }
 
-    // Rx
-    implementation "io.reactivex.rxjava2:rxkotlin:${rootProject.rxKotlinVersion}"
-    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxAndroidVersion}"
-
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 
     // Unit Testing
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:${rootProject.kotlinVersion}"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:${rootProject.kotlinVersion}"
-
-    // UI Testing
-    androidTestImplementation "androidx.test:core:${rootProject.testVersion}"
 }
 
 dexcount {

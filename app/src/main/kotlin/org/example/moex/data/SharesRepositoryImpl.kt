@@ -1,8 +1,11 @@
 package org.example.moex.data
 
-import io.reactivex.Observable
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by 5turman on 22.03.2017.
@@ -25,17 +28,15 @@ class SharesRepositoryImpl constructor(
         }
     }
 
-    override fun get(shareId: String, period: Int): Observable<Share> =
-        Observable.empty()
-//        remoteDataSource.get(shareId)
-//            .repeatWhen { source -> source.delay(period.toLong(), TimeUnit.SECONDS) }
-//            .doOnNext { share ->
-//                cache[share.id] = share
-//                localDataSource.put(share).blockingAwait()
-//                quotesStorage.getWriter(shareId).use {
-//                    it.write(share.last, share.timestamp)
-//                }
-//            }
-//            .toObservable()
+    override fun get(shareId: String, period: Long, timeUnit: TimeUnit): Flow<Share> =
+        flow {
+            while (true) {
+                val share = remoteDataSource.get(shareId)
+                localDataSource.put(share)
+                emit(share)
+                delay(timeUnit.toMillis(period))
+            }
+
+        }
 
 }

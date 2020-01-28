@@ -1,14 +1,18 @@
 package org.example.moex.ui.shares
 
-import androidx.test.platform.app.InstrumentationRegistry
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.rule.ActivityTestRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.example.moex.R
 import org.example.moex.api.NetworkException
 import org.example.moex.data.model.Share
@@ -42,43 +46,48 @@ class SharesScreenTest {
     fun noData() {
         activityTestRule.launchActivity(null)
 
-        onView(withId(R.id.zeroView)).check(matches(isDisplayed()))
+        onView(withId(R.id.zero_view)).check(matches(isDisplayed()))
     }
 
     @Test
     fun noNetwork() {
-        val error = InstrumentationRegistry.getTargetContext().resources
-                .getString(R.string.error_network)
+        val error = ApplicationProvider.getApplicationContext<Context>().resources
+            .getString(R.string.no_connection)
 
-        FakeSharesRemoteDataSource.error = NetworkException(error)
+        FakeSharesRemoteDataSource.error = NetworkException
 
         activityTestRule.launchActivity(null)
 
-        onView(withId(R.id.zeroView)).check(matches(isDisplayed()))
+        onView(withId(R.id.zero_view)).check(matches(isDisplayed()))
         onView(withText(error)).check(matches(isDisplayed()))
     }
 
     @Test
     fun cachedData() {
-        FakeSharesLocalDataSource.put(sampleData())
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            FakeSharesLocalDataSource.put(sampleData())
+        }
 
         activityTestRule.launchActivity(null)
 
-        onView(withId(R.id.zeroView)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.zero_view)).check(matches(not(isDisplayed())))
         onView(withText("Yandex clA")).check(matches(isDisplayed()))
     }
 
     @Test
     fun changeOrientation() {
-        FakeSharesLocalDataSource.put(sampleData())
+        GlobalScope.launch(Dispatchers.Main.immediate) {
+            FakeSharesLocalDataSource.put(sampleData())
+        }
 
         // No network
-        val error = "no network"
-        FakeSharesRemoteDataSource.error = NetworkException(error)
+        val error = ApplicationProvider.getApplicationContext<Context>().resources
+            .getString(R.string.no_connection)
+        FakeSharesRemoteDataSource.error = NetworkException
 
         activityTestRule.launchActivity(null)
 
-        onView(withId(R.id.refreshLayout)).perform(swipeDown())
+        onView(withId(R.id.refresh_layout)).perform(swipeDown())
 
         onView(withText(error)).check(matches(isDisplayed()))
         onView(withText("Yandex clA")).check(matches(isDisplayed()))
@@ -92,9 +101,9 @@ class SharesScreenTest {
         val now = DateTimeUtils.currentTimeMillis()
 
         return listOf(
-                Share("MSNG", "МосЭнерго акции обыкн.", "+МосЭнерго", now, 2.199, 3.43),
-                Share("YNDX", "PLLC Yandex N.V. class A shs", "Yandex clA", now, 1266.0, -1.78),
-                Share("SBER", "Сбербанк России ПАО ао", "Сбербанк", now, 149.23, -1.82)
+            Share("MSNG", "МосЭнерго акции обыкн.", "+МосЭнерго", now, 2.199, 3.43),
+            Share("YNDX", "PLLC Yandex N.V. class A shs", "Yandex clA", now, 1266.0, -1.78),
+            Share("SBER", "Сбербанк России ПАО ао", "Сбербанк", now, 149.23, -1.82)
         )
     }
 

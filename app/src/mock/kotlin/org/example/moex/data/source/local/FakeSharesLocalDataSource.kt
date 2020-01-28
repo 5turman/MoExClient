@@ -1,8 +1,5 @@
 package org.example.moex.data.source.local
 
-import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
 import org.example.moex.data.model.Share
 import org.example.moex.data.source.SharesDataSource
 
@@ -13,20 +10,20 @@ object FakeSharesLocalDataSource : SharesDataSource {
 
     private val shares = mutableListOf<Share>()
 
-    override fun getAll(): Single<List<Share>> {
-        return Single.just(shares)
+    override suspend fun getAll(): List<Share> {
+        return shares
     }
 
-    override fun get(id: String): Maybe<Share> {
+    override suspend fun get(id: String): Share {
         TODO("not implemented")
     }
 
-    override fun put(share: Share): Completable {
+    override suspend fun put(share: Share) {
         TODO("not implemented")
     }
 
-    override fun put(shares: List<Share>): Completable {
-        TODO("not implemented")
+    override suspend fun put(shares: List<Share>) {
+        this.shares.addAll(shares)
     }
 
     fun reset() {

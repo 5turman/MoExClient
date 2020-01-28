@@ -3,61 +3,59 @@ package org.example.moex.ui.shares
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
-import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.example.moex.BuildConfig
 import org.example.moex.core.ResourceText
 import org.example.moex.core.commands.Command
 import org.example.moex.core.commands.CommandLiveData
 import org.example.moex.core.getMessage
 import org.example.moex.data.SharesRepository
 import org.example.moex.data.model.Share
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by 5turman on 22.03.2017.
  */
+
 class SharesViewModel constructor(
     private val repo: SharesRepository
 ) : ViewModel() {
 
     private val refreshingLiveData = MutableLiveData<Boolean>()
-    private val sharesLiveData = MutableLiveData<List<Share>>()
+    private val filteredSharesLiveData = MutableLiveData<List<Share>>()
     private val commandLiveData = CommandLiveData()
 
-    private val sharesSubject = BehaviorSubject.create<List<Share>>()
-    private val querySubject = BehaviorSubject.createDefault<String>("")
+    private val sharesLiveData = MutableLiveData<List<Share>>()
+    private val queryLiveData = MutableLiveData<String>("")
 
-    private val queryDisposable = Observable.combineLatest(
-        sharesSubject,
-        querySubject
-            .apply {
-                // Temporary workaround to pass UI tests
-                if (BuildConfig.FLAVOR != "mock") {
-                    debounce(400, TimeUnit.MILLISECONDS) // computation scheduler
+    init {
+        viewModelScope.launch {
+            sharesLiveData.asFlow().combine(
+                queryLiveData.asFlow()
+                    .debounce(400)
+                    .map { it.trim() }
+                    .distinctUntilChanged()
+            ) { shares, query ->
+                if (query.isEmpty()) {
+                    shares
+                } else {
+                    shares.filter { share ->
+                        share.id.contains(query, true) || share.shortName.contains(query, true)
+                    }
                 }
-            }
-            .map(String::trim)
-            .distinctUntilChanged(),
-        BiFunction<List<Share>, String, List<Share>> { shares, query ->
-            if (query.isEmpty()) {
-                shares
-            } else {
-                shares.filter { share ->
-                    share.id.contains(query, true) || share.shortName.contains(query, true)
-                }
+            }.collect {
+                filteredSharesLiveData.value = it
             }
         }
-    )
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-            sharesLiveData.value = it
-        }
+    }
 
     private var loadSharesJob: Job? = null
 
@@ -67,7 +65,7 @@ class SharesViewModel constructor(
         if (loadSharesJob == null) {
             loadShares(false)
         }
-        return sharesLiveData
+        return filteredSharesLiveData
     }
 
     fun commands(): LiveData<Command> = commandLiveData
@@ -78,7 +76,7 @@ class SharesViewModel constructor(
     }
 
     fun onQueryTextChange(query: String) {
-        querySubject.onNext(query)
+        queryLiveData.value = query
     }
 
     fun onShareClicked(share: Share) {
@@ -91,7 +89,7 @@ class SharesViewModel constructor(
         loadSharesJob = viewModelScope.launch {
             try {
                 val shares = repo.getAll(forceUpdate).sortedBy { it.shortName }
-                sharesSubject.onNext(shares)
+                sharesLiveData.value = shares
             } catch (e: Throwable) {
                 commandLiveData.add(ShowError { getMessage(e) })
             } finally {
@@ -100,9 +98,6 @@ class SharesViewModel constructor(
         }
     }
 
-    override fun onCleared() {
-        queryDisposable.dispose()
-    }
 }
 
 data class ShowError(val error: ResourceText) : Command()

@@ -1,6 +1,5 @@
 package org.example.moex.data.source
 
-import io.reactivex.Completable
 import org.example.moex.data.model.Share
 
 /**
@@ -10,9 +9,9 @@ interface SharesDataSource {
 
     suspend fun getAll(): List<Share>
 
-    suspend fun get(id: String): Share?
+    suspend fun get(id: String): Share
 
-    fun put(share: Share): Completable
+    suspend fun put(share: Share)
 
     suspend fun put(shares: List<Share>)
 

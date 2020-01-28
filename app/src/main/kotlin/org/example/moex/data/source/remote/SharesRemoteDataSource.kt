@@ -1,6 +1,5 @@
 package org.example.moex.data.source.remote
 
-import io.reactivex.Completable
 import org.example.moex.api.Api
 import org.example.moex.api.tryWithApiErrorHandler
 import org.example.moex.data.SharesBuilder
@@ -20,13 +19,13 @@ class SharesRemoteDataSource constructor(
                 .let { SharesBuilder.build(it) }
         }
 
-    override suspend fun get(id: String): Share? =
+    override suspend fun get(id: String): Share =
         tryWithApiErrorHandler {
             api.getShare(id)
                 .let { SharesBuilder.build(it)[0] }
         }
 
-    override fun put(share: Share): Completable {
+    override suspend fun put(share: Share) {
         throw UnsupportedOperationException()
     }
 

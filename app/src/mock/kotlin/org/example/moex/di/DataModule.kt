@@ -17,8 +17,7 @@ val dataModule = module {
     single<SharesRepository> {
         SharesRepositoryImpl(
             get(qualifier = local),
-            get(qualifier = remote),
-            get()
+            get(qualifier = remote)
         )
     }
 
