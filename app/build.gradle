@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
@@ -96,6 +96,7 @@ dependencies {
     // AndroidX Libraries
     implementation "androidx.appcompat:appcompat:${rootProject.appcompatVersion}"
     implementation "androidx.recyclerview:recyclerview:${rootProject.recyclerViewVersion}"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:${rootProject.swipeRefreshLayoutVersion}"
 
     // Material
     implementation "com.google.android.material:material:${rootProject.materialVersion}"
