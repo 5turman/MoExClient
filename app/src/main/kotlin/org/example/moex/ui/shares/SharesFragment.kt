@@ -6,13 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_shares.*
+import moxy.MvpAppCompatFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import org.example.moex.App
 import org.example.moex.R
-import org.example.moex.core.MvpAppCompatFragment
 import org.example.moex.data.model.Share
 import org.example.moex.ui.chart.ChartActivity
 
@@ -47,11 +47,11 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View =
-            inflater.inflate(R.layout.fragment_shares, container, false)
+        inflater.inflate(R.layout.fragment_shares, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (activity as AppCompatActivity).apply {

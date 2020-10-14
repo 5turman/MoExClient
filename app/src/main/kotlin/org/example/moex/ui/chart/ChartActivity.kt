@@ -4,10 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.pawegio.kandroid.IntentFor
 import kotlinx.android.synthetic.main.activity_chart.*
 import org.example.moex.App
 import org.example.moex.R
+import org.example.moex.core.newIntent
 
 /**
  * Created by 5turman on 6/2/2017.
@@ -19,7 +19,7 @@ class ChartActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_chart)
 
-        val shareId = intent.getStringExtra(KEY_ID)
+        val shareId = intent.getStringExtra(KEY_ID)!!
         App.component(this).chartComponent(ChartModule(shareId)).inject(chart)
 
         lifecycle.addObserver(chart.presenter)
@@ -27,7 +27,7 @@ class ChartActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context, shareId: String): Intent =
-            IntentFor<ChartActivity>(context).putExtra(KEY_ID, shareId)
+            context.newIntent<ChartActivity>().putExtra(KEY_ID, shareId)
     }
 
 }

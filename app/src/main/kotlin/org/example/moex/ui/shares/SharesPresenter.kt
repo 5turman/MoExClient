@@ -1,8 +1,7 @@
 package org.example.moex.ui.shares
 
 import android.content.res.Resources
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.MvpPresenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -10,6 +9,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import moxy.InjectViewState
 import org.example.moex.BuildConfig
 import org.example.moex.core.getMessage
 import org.example.moex.data.SharesRepository

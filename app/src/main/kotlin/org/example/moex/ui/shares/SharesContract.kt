@@ -1,9 +1,8 @@
 package org.example.moex.ui.shares
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.MvpView
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.OneExecution
 import org.example.moex.data.model.Share
 
 /**
@@ -11,16 +10,17 @@ import org.example.moex.data.model.Share
  */
 interface SharesContract {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
     interface View : MvpView {
+        @AddToEndSingle
         fun showRefreshing(show: Boolean)
 
+        @AddToEndSingle
         fun showShares(shares: List<Share>)
 
-        @StateStrategyType(OneExecutionStateStrategy::class)
+        @OneExecution
         fun showError(error: String)
 
-        @StateStrategyType(OneExecutionStateStrategy::class)
+        @OneExecution
         fun show(share: Share)
     }
 

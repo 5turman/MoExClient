@@ -1,6 +1,7 @@
 package org.example.moex.core
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -17,6 +18,8 @@ fun ViewGroup.inflate(resource: Int, attachToRoot: Boolean = false): View =
 fun Context.showToast(text: CharSequence) {
     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
 }
+
+inline fun <reified T> Context.newIntent(): Intent = Intent(this, T::class.java)
 
 fun DisplayMetrics.toPx(dp: Int) = (density * dp + 0.5f).toInt()
 

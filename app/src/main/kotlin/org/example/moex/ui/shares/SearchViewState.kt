@@ -9,8 +9,8 @@ import android.os.Parcelable
 class SearchViewState(val isIconified: Boolean, val query: String) : Parcelable {
 
     constructor(source: Parcel) : this(
-            source.readInt() != 0,
-            source.readString()
+        source.readInt() != 0,
+        source.readString()!!
     )
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

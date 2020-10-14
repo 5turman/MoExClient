@@ -8,13 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
-import com.pawegio.kandroid.IntentFor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_share.*
 import org.example.moex.App
 import org.example.moex.R
 import org.example.moex.api.Api
+import org.example.moex.core.newIntent
 import org.example.moex.data.model.Interval
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -36,6 +36,7 @@ class ShareActivity : AppCompatActivity() {
         val shareId = intent.getStringExtra(KEY_ID)
         if (shareId == null) {
             finish()
+            return
         }
 
         App.component(this).inject(this)
@@ -86,7 +87,7 @@ class ShareActivity : AppCompatActivity() {
 
     companion object {
         fun newIntent(context: Context, shareId: String): Intent =
-            IntentFor<ShareActivity>(context).putExtra(KEY_ID, shareId)
+            context.newIntent<ShareActivity>().putExtra(KEY_ID, shareId)
     }
 
 }

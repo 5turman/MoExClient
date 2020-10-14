@@ -2,12 +2,11 @@ package org.example.moex.ui.shares
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.pawegio.kandroid.find
 import org.example.moex.R
 import org.example.moex.core.BaseAdapter
 import org.example.moex.core.inflate
@@ -48,11 +47,11 @@ class SharesAdapter(private val callback: Callback) :
     }
 
     class ViewHolder(itemView: View, callback: Callback) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.find<TextView>(R.id.shareName)
-        val id = itemView.find<TextView>(R.id.shareId)
-        val value = itemView.find<TextView>(R.id.shareValue)
-        val change = itemView.find<TextView>(R.id.shareChange)
-        val dateTime = itemView.find<TextView>(R.id.shareDateTime)
+        val name: TextView = itemView.findViewById(R.id.shareName)
+        val id: TextView = itemView.findViewById(R.id.shareId)
+        val value: TextView = itemView.findViewById(R.id.shareValue)
+        val change: TextView = itemView.findViewById(R.id.shareChange)
+        val dateTime: TextView = itemView.findViewById(R.id.shareDateTime)
 
         init {
             itemView.setOnClickListener {
