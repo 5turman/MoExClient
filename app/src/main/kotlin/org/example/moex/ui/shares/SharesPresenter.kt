@@ -1,15 +1,14 @@
 package org.example.moex.ui.shares
 
 import android.content.res.Resources
-import moxy.MvpPresenter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import moxy.InjectViewState
+import moxy.MvpPresenter
 import org.example.moex.BuildConfig
 import org.example.moex.core.getMessage
 import org.example.moex.data.SharesRepository
@@ -29,7 +28,7 @@ class SharesPresenter
     MvpPresenter<SharesContract.View>(), SharesContract.Presenter {
 
     private val sharesSubject = PublishSubject.create<List<Share>>()
-    private val querySubject = BehaviorSubject.createDefault<String>("")
+    private val querySubject = BehaviorSubject.createDefault("")
 
     private lateinit var queryDisposable: Disposable
 
@@ -47,7 +46,7 @@ class SharesPresenter
                 }
                 .map(String::trim)
                 .distinctUntilChanged(),
-            BiFunction<List<Share>, String, List<Share>> { shares, query ->
+            { shares, query ->
                 if (query.isEmpty()) {
                     shares
                 } else {
@@ -88,7 +87,7 @@ class SharesPresenter
         querySubject.onNext(query)
     }
 
-    override fun onShareClick(share: Share) {
+    override fun onShareClicked(share: Share) {
         viewState.show(share)
     }
 
@@ -96,7 +95,7 @@ class SharesPresenter
         viewState.showRefreshing(true)
 
         repoDisposable = repo.getAll(forceUpdate)
-            .map { it.sortedBy { it.shortName } }
+            .map { shares -> shares.sortedBy { it.shortName } }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .doAfterTerminate {

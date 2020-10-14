@@ -36,9 +36,8 @@ class SharesFragment : MvpAppCompatFragment(), SharesContract.View {
         super.onCreate(savedInstanceState)
 
         adapter = SharesAdapter(object : SharesAdapter.Callback {
-            override fun onClick(position: Int) {
-                val share = adapter.getItem(position)
-                presenter.onShareClick(share)
+            override fun onShareClicked(share: Share) {
+                presenter.onShareClicked(share)
             }
         })
         searchViewState = savedInstanceState?.getParcelable(STATE_SEARCH_VIEW)

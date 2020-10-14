@@ -27,7 +27,7 @@ interface SharesContract {
     interface Presenter {
         fun onRefresh()
         fun onQueryTextChange(query: String)
-        fun onShareClick(share: Share)
+        fun onShareClicked(share: Share)
     }
 
 }
